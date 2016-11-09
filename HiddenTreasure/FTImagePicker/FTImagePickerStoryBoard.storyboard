@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="HOd-xX-b8B">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="yw7-dg-6t1">
+            <objects>
+                <navigationController storyboardIdentifier="FTImagePickerNavigationController" useStoryboardIdentifierAsRestorationIdentifier="YES" navigationBarHidden="YES" id="HOd-xX-b8B" sceneMemberID="viewController">
+                    <nil key="simulatedTopBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Iy4-kS-1wH">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="AtQ-mb-fdN" kind="relationship" relationship="rootViewController" id="vUt-bA-N26"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bH5-jH-m2n" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-316" y="90"/>
+        </scene>
+        <!--AlbumL Ist View Controller-->
+        <scene sceneID="5vI-H4-9zd">
+            <objects>
+                <viewController storyboardIdentifier="FTAlbumLIstViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="AtQ-mb-fdN" customClass="FTAlbumLIstViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Qry-gU-UVp"/>
+                        <viewControllerLayoutGuide type="bottom" id="Egq-wo-U3u"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="4W7-O6-JEM">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="85p-Gh-31i">
+                                <frame key="frameInset"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="0.0" id="YGb-h9-ZTm">
+                                    <size key="itemSize" width="160" height="175"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="albumListCells" id="e3s-R0-04T" customClass="FTAlbumListCollectionViewCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="160" height="175"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="160" height="175"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Udp-dZ-qaK">
+                                                    <frame key="frameInset" minX="13.75%" minY="8.00%" width="72.50%" height="66.29%"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wnK-C5-6w4">
+                                                    <frame key="frameInset" minX="12.50%" minY="9.14%" width="75.63%" height="69.14%"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PDh-sg-pi3">
+                                                    <frame key="frameInset" minX="10.63%" minY="10.86%" width="79.38%" height="72.57%"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Album Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YRk-wH-IXP">
+                                                    <frame key="frameInset" minX="10.63%" minY="85.71%" width="79.38%" height="12.00%"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </view>
+                                        <connections>
+                                            <outlet property="albumTitle" destination="YRk-wH-IXP" id="D78-fN-eYx"/>
+                                            <outlet property="imageView1" destination="PDh-sg-pi3" id="Ln5-d8-zGM"/>
+                                            <outlet property="imageView2" destination="wnK-C5-6w4" id="MBA-Aa-X5T"/>
+                                            <outlet property="imageView3" destination="Udp-dZ-qaK" id="bxg-pE-qlu"/>
+                                            <segue destination="kqN-Lu-1hX" kind="show" identifier="albumListToImagePicker" id="b2e-Gj-rwv"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="AtQ-mb-fdN" id="huw-eJ-KV2"/>
+                                    <outlet property="delegate" destination="AtQ-mb-fdN" id="u5Q-su-GeZ"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="OOT-xw-v2x"/>
+                    <connections>
+                        <outlet property="albumlistCollectionView" destination="85p-Gh-31i" id="Pz6-WE-g7y"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oXm-XO-Lu5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="472.80000000000001" y="89.505247376311857"/>
+        </scene>
+        <!--Image Picker View Controller-->
+        <scene sceneID="ZjT-Te-FRa">
+            <objects>
+                <viewController storyboardIdentifier="FTImagePickerViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="kqN-Lu-1hX" customClass="FTImagePickerViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Oon-NF-1kN"/>
+                        <viewControllerLayoutGuide type="bottom" id="GKy-4A-v44"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="voJ-Ly-ikR">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gC1-7B-3cg">
+                                <frame key="frameInset"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="1" id="a2n-dF-9c6">
+                                    <size key="itemSize" width="130" height="126"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="44"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="imagePickerCells" id="eDH-2C-rHP" customClass="FTImagePickerCollectionViewCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="130" height="126"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="130" height="126"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eom-H7-K1G">
+                                                    <frame key="frameInset"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                </imageView>
+                                            </subviews>
+                                        </view>
+                                        <connections>
+                                            <outlet property="thumbnailForCells" destination="Eom-H7-K1G" id="iog-h1-nPq"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ImagePickerCollectionViewsFooter" id="mcN-rl-lpV">
+                                    <rect key="frame" x="0.0" y="126" width="375" height="44"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </collectionReusableView>
+                                <connections>
+                                    <outlet property="dataSource" destination="kqN-Lu-1hX" id="B5c-Qw-aS9"/>
+                                    <outlet property="delegate" destination="kqN-Lu-1hX" id="95N-Fp-voq"/>
+                                    <outletCollection property="gestureRecognizers" destination="4Zq-Wf-JkX" appends="YES" id="nLc-fO-qTF"/>
+                                    <outletCollection property="gestureRecognizers" destination="okw-ZB-d2C" appends="YES" id="MLu-1h-0Qw"/>
+                                    <outletCollection property="gestureRecognizers" destination="AhX-qV-Lex" appends="YES" id="6qT-g9-x0c"/>
+                                </connections>
+                            </collectionView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rnd-7c-nEn">
+                                <frame key="frameInset" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wL4-mF-YhO">
+                                        <frame key="frameInset" minY="50.00%" width="44" height="30" maxX="19"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Select"/>
+                                        <connections>
+                                            <action selector="multiSelectConfirmedSelectBtnClicked:" destination="kqN-Lu-1hX" eventType="touchUpInside" id="OFY-Jq-WDX"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rhm-1v-pZe">
+                                        <frame key="frameInset" minX="18" minY="50.00%" width="44" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Album"/>
+                                        <connections>
+                                            <action selector="backToAlbumBtnClicked:" destination="kqN-Lu-1hX" eventType="touchUpInside" id="wpv-RP-zqo"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sA0-2x-2dA">
+                                        <frame key="frameInset" minX="49.85%" minY="50.00%" width="48" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Cancel"/>
+                                        <connections>
+                                            <action selector="cancelImagePickerBtnClicked:" destination="kqN-Lu-1hX" eventType="touchUpInside" id="HI9-oB-qZf"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                    </view>
+                    <connections>
+                        <outlet property="FTDetailView" destination="bkV-ob-btx" id="9Di-31-jI3"/>
+                        <outlet property="FTimagePickerCollectionView" destination="gC1-7B-3cg" id="xcU-hM-vgM"/>
+                        <outlet property="buttonBarView" destination="rnd-7c-nEn" id="zfp-C4-Njq"/>
+                        <outlet property="selectBtn" destination="wL4-mF-YhO" id="nKN-yq-0r0"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8Vf-Kj-VLR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="bkV-ob-btx" customClass="FTDetailView">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="io9-gH-8aC">
+                            <frame key="frameInset"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="BHq-Gv-U4j">
+                                <size key="itemSize" width="375" height="666"/>
+                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </collectionViewFlowLayout>
+                            <cells>
+                                <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="detailViewCells" id="S9b-0n-swT" customClass="FTDetailViewCollectionViewCell">
+                                    <rect key="frame" x="0.0" y="1" width="375" height="666"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="666"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <subviews>
+                                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NF1-hi-aJU">
+                                                <frame key="frameInset"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h4j-dp-bmF">
+                                                        <rect key="frame" x="0.0" y="-1" width="1125" height="1999"/>
+                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        <gestureRecognizers/>
+                                                    </imageView>
+                                                </subviews>
+                                            </scrollView>
+                                        </subviews>
+                                    </view>
+                                    <connections>
+                                        <outlet property="detailImageView" destination="h4j-dp-bmF" id="T3E-ux-Wcl"/>
+                                        <outlet property="scrollViewForZoom" destination="NF1-hi-aJU" id="I3Q-o4-VgM"/>
+                                    </connections>
+                                </collectionViewCell>
+                            </cells>
+                            <connections>
+                                <outlet property="dataSource" destination="bkV-ob-btx" id="IJ4-DY-x2T"/>
+                                <outlet property="delegate" destination="bkV-ob-btx" id="H5J-fy-j0Y"/>
+                                <outletCollection property="gestureRecognizers" destination="TgQ-DY-8TL" appends="YES" id="k8T-Ko-4L5"/>
+                            </connections>
+                        </collectionView>
+                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Kkj-jB-hpK">
+                            <frame key="frameInset" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L37-a2-goy">
+                                    <frame key="frameInset" minX="18" minY="50.00%" width="12.33%" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="Back"/>
+                                    <connections>
+                                        <action selector="dismissViewBtnClicked:" destination="bkV-ob-btx" eventType="touchUpInside" id="Ebl-Ip-VOm"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tqw-gY-QKe">
+                                    <frame key="frameInset" minY="50.00%" width="12.36%" height="30" maxX="19"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="Select"/>
+                                    <connections>
+                                        <action selector="selectBtnClicked:" destination="bkV-ob-btx" eventType="touchUpInside" id="Lbm-fr-AQz"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="buttonBarView" destination="Kkj-jB-hpK" id="rmx-Ts-Joj"/>
+                        <outlet property="detailCollectionView" destination="io9-gH-8aC" id="BRE-AP-7EG"/>
+                        <outlet property="selectBtn" destination="Tqw-gY-QKe" id="8Mi-cY-LHF"/>
+                    </connections>
+                </view>
+                <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="4Zq-Wf-JkX">
+                    <rectEdge key="edges" left="YES"/>
+                    <connections>
+                        <action selector="backToAlbumLeftEdgePan:" destination="kqN-Lu-1hX" id="Gj7-w2-eLf"/>
+                    </connections>
+                </screenEdgePanGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="okw-ZB-d2C">
+                    <connections>
+                        <action selector="showDetailCellLongPressed:" destination="kqN-Lu-1hX" id="uev-XB-u38"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="TgQ-DY-8TL">
+                    <connections>
+                        <action selector="dismissViewDownPan:" destination="bkV-ob-btx" id="XjL-Ro-Rt6"/>
+                        <outlet property="delegate" destination="bkV-ob-btx" id="0xA-HM-4mL"/>
+                    </connections>
+                </panGestureRecognizer>
+                <pinchGestureRecognizer id="AhX-qV-Lex">
+                    <connections>
+                        <action selector="cellZoomInOutPinch:" destination="kqN-Lu-1hX" id="hDZ-g0-Tsk"/>
+                    </connections>
+                </pinchGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="1288.8" y="89.505247376311857"/>
+        </scene>
+    </scenes>
+    <color key="tintColor" red="1" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+</document>

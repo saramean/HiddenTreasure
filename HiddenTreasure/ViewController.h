@@ -7,9 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HTTutorialPageContentsViewController.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <UIPageViewControllerDataSource>
+@property (strong, nonatomic) NSArray<NSString *> *tutorialPagetitles;
+@property (strong, nonatomic) NSArray<NSString *> *tutorialPageDescriptions;
 
+- (HTTutorialPageContentsViewController *) viewControllerAtIndex:(NSUInteger) index;
 
 @end
 
