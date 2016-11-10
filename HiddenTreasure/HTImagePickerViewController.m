@@ -403,8 +403,6 @@
 }
 
 - (IBAction)deleteImagesBtnTouched:(id)sender {
-    //image count befor delete
-    int imageCountBeforeDelete = (int) [self.HTHiddenImagesFileNameArray count];
     //File manager
     NSFileManager *fileManager = [NSFileManager defaultManager];
     //Directory paths
@@ -443,30 +441,25 @@
         self.HTImagePickerExportBtn.enabled = NO;
         self.HTImagePickerDeleteBtn.hidden = YES;
         self.HTImagePickerDeleteBtn.enabled = NO;
+        //Move images
+        //1. find image which index is not equal to its file name
+        //2. move it to its correct index
         for(int i = 0 ; i < [self.HTHiddenImagesFileNameArray count]; i++){
-            int blankStart = 0;
-            if(self.HTHiddenImagesFileNameArray[i] && ![self.HTHiddenImagesFileNameArray[i] isEqualToString:[NSString stringWithFormat:@"%@_HI%04d.jpg", trimmedAlbumName, i + 1]]){
-                blankStart = i + 1;
+            if(![self.HTHiddenImagesFileNameArray[i] isEqualToString:[NSString stringWithFormat:@"%@_HI%04d.jpg", trimmedAlbumName, i + 1]]){
                 NSString *nearBlank = [self.HTHiddenImagesFileNameArray[i] substringWithRange:NSMakeRange(trimmedAlbumName.length + 3, 4)];
-                NSLog(@"nearBlank %@", nearBlank);
-                int blankEnd = [nearBlank intValue];
-                NSLog(@"blankEnd %d", blankEnd);
-                for(int j = blankStart; j < blankEnd ; j++){
-                    if(j == imageCountBeforeDelete){
-                        break;
-                    }
-                    NSString *originalFileForThumbnail = [NSString stringWithFormat:@"%@%@%@_HI%04d.jpg", DocumentDir, @"thumbnail/", trimmedAlbumName, j + (blankEnd - blankStart)];
-                    NSString *destinationFileForThumbnail= [NSString stringWithFormat:@"%@%@%@_HI%04d.jpg", DocumentDir, @"thumbnail/", trimmedAlbumName, j];
-                    NSString *originalFileForResize = [NSString stringWithFormat:@"%@%@%@_HI%04d.jpg", DocumentDir, @"resize/", trimmedAlbumName, j + (blankEnd - blankStart)];
-                    NSString *destinationFileForResize= [NSString stringWithFormat:@"%@%@%@_HI%04d.jpg", DocumentDir, @"resize/", trimmedAlbumName, j];
-                    NSString *originalFileForOriginal = [NSString stringWithFormat:@"%@%@%@_HI%04d.jpg", DocumentDir, @"original/", trimmedAlbumName, j + (blankEnd - blankStart)];
-                    NSString *destinationFileForOriginal = [NSString stringWithFormat:@"%@%@%@_HI%04d.jpg", DocumentDir, @"original/", trimmedAlbumName, j];
-                    
-                    [fileManager moveItemAtPath:originalFileForThumbnail toPath:destinationFileForThumbnail error:nil];
-                    [fileManager moveItemAtPath:originalFileForResize toPath:destinationFileForResize error:nil];
-                    [fileManager moveItemAtPath:originalFileForOriginal toPath:destinationFileForOriginal error:nil];
-                }
+                int nearBlankInt = [nearBlank intValue];
+                NSString *originalFileForThumbnail = [NSString stringWithFormat:@"%@%@%@_HI%04d.jpg", DocumentDir, @"thumbnail/", trimmedAlbumName, nearBlankInt];
+                NSString *destinationFileForThumbnail= [NSString stringWithFormat:@"%@%@%@_HI%04d.jpg", DocumentDir, @"thumbnail/", trimmedAlbumName, i+1];
+                NSString *originalFileForResize = [NSString stringWithFormat:@"%@%@%@_HI%04d.jpg", DocumentDir, @"resize/", trimmedAlbumName, nearBlankInt];
+                NSString *destinationFileForResize= [NSString stringWithFormat:@"%@%@%@_HI%04d.jpg", DocumentDir, @"resize/", trimmedAlbumName, i+1];
+                NSString *originalFileForOriginal = [NSString stringWithFormat:@"%@%@%@_HI%04d.jpg", DocumentDir, @"original/", trimmedAlbumName, nearBlankInt];
+                NSString *destinationFileForOriginal = [NSString stringWithFormat:@"%@%@%@_HI%04d.jpg", DocumentDir, @"original/", trimmedAlbumName, i+1];
+                [fileManager moveItemAtPath:originalFileForThumbnail toPath:destinationFileForThumbnail error:nil];
+                [fileManager moveItemAtPath:originalFileForResize toPath:destinationFileForResize error:nil];
+                [fileManager moveItemAtPath:originalFileForOriginal toPath:destinationFileForOriginal error:nil];
                 
+                self.HTHiddenImagesFileNameArray[i] = [NSString stringWithFormat:@"%@_HI%04d.jpg", trimmedAlbumName, i+1];
+                NSLog(@"Filenames after file moved %@", self.HTHiddenImagesFileNameArray);
             }
         }
         [self.selectedImages removeAllObjects];
