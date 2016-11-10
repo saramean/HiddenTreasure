@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E110F4C1DD43FA3008E6F33 /* HTVideoAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E110F4B1DD43FA3008E6F33 /* HTVideoAlbumViewController.m */; };
+		4E110F4F1DD4400E008E6F33 /* HTVideoPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E110F4E1DD4400E008E6F33 /* HTVideoPickerViewController.m */; };
 		4EDD84B71DD00B4B001CEE8B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDD84B61DD00B4B001CEE8B /* main.m */; };
 		4EDD84BA1DD00B4B001CEE8B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDD84B91DD00B4B001CEE8B /* AppDelegate.m */; };
 		4EDD84BD1DD00B4B001CEE8B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDD84BC1DD00B4B001CEE8B /* ViewController.m */; };
@@ -33,6 +35,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4E110F4A1DD43FA3008E6F33 /* HTVideoAlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTVideoAlbumViewController.h; sourceTree = "<group>"; };
+		4E110F4B1DD43FA3008E6F33 /* HTVideoAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTVideoAlbumViewController.m; sourceTree = "<group>"; };
+		4E110F4D1DD4400E008E6F33 /* HTVideoPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTVideoPickerViewController.h; sourceTree = "<group>"; };
+		4E110F4E1DD4400E008E6F33 /* HTVideoPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTVideoPickerViewController.m; sourceTree = "<group>"; };
 		4EDD84B21DD00B4B001CEE8B /* HiddenTreasure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HiddenTreasure.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EDD84B61DD00B4B001CEE8B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4EDD84B81DD00B4B001CEE8B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -86,6 +92,37 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4E110F471DD43F33008E6F33 /* HTImage */ = {
+			isa = PBXGroup;
+			children = (
+				4EDD84F71DD070B5001CEE8B /* HTImagePickerViewController.h */,
+				4EDD84F81DD070B5001CEE8B /* HTImagePickerViewController.m */,
+				4EDD84F41DD0582C001CEE8B /* HTImageAlbumViewController.h */,
+				4EDD84F51DD0582C001CEE8B /* HTImageAlbumViewController.m */,
+			);
+			name = HTImage;
+			sourceTree = "<group>";
+		};
+		4E110F481DD43F4B008E6F33 /* HTWeb */ = {
+			isa = PBXGroup;
+			children = (
+				4EDD84F11DD05235001CEE8B /* HTWebViewController.h */,
+				4EDD84F21DD05235001CEE8B /* HTWebViewController.m */,
+			);
+			name = HTWeb;
+			sourceTree = "<group>";
+		};
+		4E110F491DD43F78008E6F33 /* HTVideo */ = {
+			isa = PBXGroup;
+			children = (
+				4E110F4A1DD43FA3008E6F33 /* HTVideoAlbumViewController.h */,
+				4E110F4B1DD43FA3008E6F33 /* HTVideoAlbumViewController.m */,
+				4E110F4D1DD4400E008E6F33 /* HTVideoPickerViewController.h */,
+				4E110F4E1DD4400E008E6F33 /* HTVideoPickerViewController.m */,
+			);
+			name = HTVideo;
+			sourceTree = "<group>";
+		};
 		4EDD84A91DD00B4B001CEE8B = {
 			isa = PBXGroup;
 			children = (
@@ -111,13 +148,10 @@
 				4EDD84B91DD00B4B001CEE8B /* AppDelegate.m */,
 				4EDD84BB1DD00B4B001CEE8B /* ViewController.h */,
 				4EDD84BC1DD00B4B001CEE8B /* ViewController.m */,
+				4E110F491DD43F78008E6F33 /* HTVideo */,
+				4E110F481DD43F4B008E6F33 /* HTWeb */,
+				4E110F471DD43F33008E6F33 /* HTImage */,
 				4EDD84BE1DD00B4B001CEE8B /* Main.storyboard */,
-				4EDD84F71DD070B5001CEE8B /* HTImagePickerViewController.h */,
-				4EDD84F81DD070B5001CEE8B /* HTImagePickerViewController.m */,
-				4EDD84F41DD0582C001CEE8B /* HTImageAlbumViewController.h */,
-				4EDD84F51DD0582C001CEE8B /* HTImageAlbumViewController.m */,
-				4EDD84F11DD05235001CEE8B /* HTWebViewController.h */,
-				4EDD84F21DD05235001CEE8B /* HTWebViewController.m */,
 				4EDD84E81DD0410F001CEE8B /* HTHideInfoViewController.h */,
 				4EDD84E91DD0410F001CEE8B /* HTHideInfoViewController.m */,
 				4EDD84E51DD0372E001CEE8B /* HTAuthenticationViewController.h */,
@@ -249,6 +283,7 @@
 			files = (
 				4EDD84BD1DD00B4B001CEE8B /* ViewController.m in Sources */,
 				4EDD84BA1DD00B4B001CEE8B /* AppDelegate.m in Sources */,
+				4E110F4F1DD4400E008E6F33 /* HTVideoPickerViewController.m in Sources */,
 				4EDD850A1DD090AC001CEE8B /* FTImagePicker.m in Sources */,
 				4EDD84C31DD00B4B001CEE8B /* HiddenTreasure.xcdatamodeld in Sources */,
 				4EDD85091DD090AC001CEE8B /* FTDetailView.m in Sources */,
@@ -261,6 +296,7 @@
 				4EDD84E11DD035CE001CEE8B /* KeychainWrapper.m in Sources */,
 				4EDD84B71DD00B4B001CEE8B /* main.m in Sources */,
 				4EDD850E1DD090AC001CEE8B /* FTImagePickerViewController.m in Sources */,
+				4E110F4C1DD43FA3008E6F33 /* HTVideoAlbumViewController.m in Sources */,
 				4EDD850C1DD090AC001CEE8B /* FTImagePickerCells.m in Sources */,
 				4EDD84DD1DD013BD001CEE8B /* HTTutorialPageContentsViewController.m in Sources */,
 				4EDD84EA1DD0410F001CEE8B /* HTHideInfoViewController.m in Sources */,

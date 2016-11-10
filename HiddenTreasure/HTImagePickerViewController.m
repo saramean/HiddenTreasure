@@ -52,6 +52,7 @@
     self.HTImageDetailView.frame = self.view.frame;
     self.HTImageDetailView.thumbnailImages = self.thumbnailImages;
     self.HTImageDetailView.selectedAlbumName = self.selectedAlbumName;
+    self.HTImageDetailView.HTImagePickerCollectionView = self.HTImagePickerCollectionView;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -90,9 +91,10 @@
         DocumentDirsArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         DocumentDir = DocumentDirsArray[0];
         DocumentDir = [NSString stringWithFormat:@"%@%@%@/", DocumentDir, @"/HTHiddenImages/", self.selectedAlbumName];
+        NSString *trimmedAlbumName = [self.selectedAlbumName substringFromIndex:7];
         
         //Path for directories
-        NSString *fileName = [NSString stringWithFormat:@"%@_HI%04d.jpg", self.selectedAlbumName, (int) indexPath.row + 1];
+        NSString *fileName = [NSString stringWithFormat:@"%@_HI%04d.jpg", trimmedAlbumName, (int) indexPath.row + 1];
         NSString *resizeDir = [NSString stringWithFormat:@"%@%@%@", DocumentDir, @"resize/", fileName];
         
         //scroll to show selected image
@@ -227,6 +229,7 @@
                     [self.thumbnailImages addObject:thumbnail];
                     [self.HTHiddenImagesFileNameArray addObject:fileName];
                     [self.HTImagePickerCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:[self.thumbnailImages count] - 1 inSection:0]]];
+                    [self.HTImageDetailView.imageDetailCollectionView reloadData];
                 } completion:^(BOOL finished) {
                     
                 }];
@@ -406,6 +409,8 @@
 }
 
 - (IBAction)exportImagesBtnTouched:(id)sender {
+    //Array for export images
+    NSMutableArray *arrayForExport = [[NSMutableArray alloc] init];
     //Directory paths
     NSString *DocumentDir;
     NSArray *DocumentDirsArray;
@@ -418,12 +423,12 @@
         NSString *fileName = [NSString stringWithFormat:@"%@_HI%04d.jpg", trimmedAlbumName, (int) self.selectedImages[i].row + 1];
         NSString *originalDir = [NSString stringWithFormat:@"%@%@%@", DocumentDir, @"original/", fileName];
         UIImage *exportImage = [UIImage imageWithContentsOfFile:originalDir];
-        //Save Image to PhotoLibrary
-        UIImageWriteToSavedPhotosAlbum(exportImage, nil, nil, nil);
-        //Deselect cells
-        [self.HTImagePickerCollectionView deselectItemAtIndexPath:self.selectedImages[i] animated:YES];
-        [self collectionView:self.HTImagePickerCollectionView didDeselectItemAtIndexPath:self.selectedImages[i]];
+        [arrayForExport addObject:exportImage];
     }
+    //UIActivityViewController
+    UIActivityViewController *activityForSharing = [[UIActivityViewController alloc] initWithActivityItems:arrayForExport applicationActivities:nil];
+    [self presentViewController:activityForSharing animated:YES completion:nil];
+    [self.HTImagePickerCollectionView reloadItemsAtIndexPaths:self.selectedImages];
     [self.selectedImages removeAllObjects];
     [self.selectedImagesIndex removeAllIndexes];
     self.HTImagePickerCollectionView.allowsMultipleSelection = NO;
@@ -518,6 +523,7 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    NSLog(@"cell");
     HTImageDetailCollectionViewCell *detailViewCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"detailViewCell" forIndexPath:indexPath];
     
     //Directory paths
@@ -539,6 +545,7 @@
     detailViewCell.detailViewScrollView.zoomScale = 1.0;
     //frame setting
     detailViewCell.detailViewScrollView.frame = CGRectMake(0, 0, self.imageDetailCollectionView.frame.size.width, self.imageDetailCollectionView.frame.size.height);
+    detailViewCell.detailViewScrollView.contentSize = CGSizeMake(self.imageDetailCollectionView.frame.size.width, self.imageDetailCollectionView.frame.size.height);
     detailViewCell.detailViewImageView.frame = CGRectMake(0, 0, self.imageDetailCollectionView.frame.size.width, self.imageDetailCollectionView.frame.size.height);
     
     //NSLog(@"cell size %f %f", detailViewCell.frame.size.width, detailViewCell.frame.size.height);
@@ -562,7 +569,31 @@
 }
 
 - (IBAction)backToPickerBtnTouched:(id)sender {
-    [self removeFromSuperview];
+    //make a imageView For transition and configure
+    UIImageView *imageViewForTransition = [[UIImageView alloc] initWithFrame:self.HTImagePickerCollectionView.bounds];
+    imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
+    //selected cell for get image from it
+    HTImageDetailCollectionViewCell *selectedCell = (__kindof UICollectionViewCell *) [self.imageDetailCollectionView cellForItemAtIndexPath:[[self.imageDetailCollectionView indexPathsForVisibleItems] firstObject]];
+    //assign image to imageview
+    imageViewForTransition.image = selectedCell.detailViewImageView.image;
+    //add imageView as subview of Image Picker collection view
+    [self.HTImagePickerCollectionView addSubview:imageViewForTransition];
+    //Image picker cell for destination point of transition
+    HTImagePickerCollectionViewCell *selectedCellInImagePicker = (__kindof UICollectionViewCell *) [self.HTImagePickerCollectionView cellForItemAtIndexPath:[[self.imageDetailCollectionView indexPathsForVisibleItems] firstObject]];
+    //hide image in image picker for effect
+    [selectedCellInImagePicker.contentView setAlpha:0.0];
+    //Animation effect
+    [UIView animateWithDuration:0.2 animations:^{
+        [imageViewForTransition setFrame:selectedCellInImagePicker.frame];
+        NSLog(@"%f %f", selectedCellInImagePicker.frame.origin.x, selectedCellInImagePicker.frame.origin.y);
+        [self setAlpha:0.0];
+    } completion:^(BOOL finished) {
+        imageViewForTransition.contentMode = UIViewContentModeScaleAspectFill;
+        [imageViewForTransition removeFromSuperview];
+        [self removeFromSuperview];
+        //show cell in image picker after transition
+        [selectedCellInImagePicker.contentView setAlpha:1.0];
+    }];
 }
 @end
 

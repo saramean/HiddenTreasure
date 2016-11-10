@@ -1,47 +1,47 @@
 //
-//  HTImageAlbumViewController.m
+//  HTVideoAlbumViewController.m
 //  HiddenTreasure
 //
-//  Created by Park on 2016. 11. 7..
+//  Created by Park on 2016. 11. 10..
 //  Copyright © 2016년 Whybox1. All rights reserved.
 //
 
-#import "HTImageAlbumViewController.h"
+#import "HTVideoAlbumViewController.h"
 
-@interface HTImageAlbumViewController ()
+@interface HTVideoAlbumViewController ()
 
 @end
 
-@implementation HTImageAlbumViewController
+@implementation HTVideoAlbumViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    if(!self.imageAlbumNamesArray){
-        self.imageAlbumNamesArray = [[NSMutableArray alloc] init];
+    if(!self.videoAlbumNamesArray){
+        self.videoAlbumNamesArray = [[NSMutableArray alloc] init];
     }
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *DocumentDir;
     NSArray *DocumentDirsArray;
     DocumentDirsArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     DocumentDir = DocumentDirsArray[0];
-    DocumentDir = [NSString stringWithFormat:@"%@%@", DocumentDir, @"/HTHiddenImages/"];
+    DocumentDir = [NSString stringWithFormat:@"%@%@", DocumentDir, @"/HTHiddenVideos/"];
     
     
     
-    [self.imageAlbumNamesArray setArray:[fileManager contentsOfDirectoryAtPath:DocumentDir error:nil]];
-    NSLog(@"%@", self.imageAlbumNamesArray);
-    for(int i = 0 ; i < [self.imageAlbumNamesArray count] ; i++){
-        if(![self.imageAlbumNamesArray[i] hasPrefix:@"HA"]){
-            [self.imageAlbumNamesArray removeObjectAtIndex:i];
+    [self.videoAlbumNamesArray setArray:[fileManager contentsOfDirectoryAtPath:DocumentDir error:nil]];
+    NSLog(@"%@", self.videoAlbumNamesArray);
+    for(int i = 0 ; i < [self.videoAlbumNamesArray count] ; i++){
+        if(![self.videoAlbumNamesArray[i] hasPrefix:@"HA"]){
+            [self.videoAlbumNamesArray removeObjectAtIndex:i];
         }
         else{
-            self.imageAlbumNamesArray[i] = [self.imageAlbumNamesArray[i] substringFromIndex:7];
+            self.videoAlbumNamesArray[i] = [self.videoAlbumNamesArray[i] substringFromIndex:7];
         }
     }
     
     //tableview setting
-    self.HTImageAlbumTableView.allowsMultipleSelectionDuringEditing = NO;
+    self.HTVideoAlbumTableView.allowsMultipleSelectionDuringEditing = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -51,20 +51,20 @@
 
 //Table view delegate
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    HTImageAlbumTableViewCells *imageAlbumNamesCell = [tableView dequeueReusableCellWithIdentifier:@"albumNamesCell" forIndexPath:indexPath];
-    imageAlbumNamesCell.imageAlbumName.text = self.imageAlbumNamesArray[indexPath.row];
+    HTVideoAlbumTableViewCells *videoAlbumNamesCell = [tableView dequeueReusableCellWithIdentifier:@"albumNamesCell" forIndexPath:indexPath];
+    videoAlbumNamesCell.videoAlbumName.text = self.videoAlbumNamesArray[indexPath.row];
     
-//    if(indexPath.row == [self.imageAlbumNamesArray count]){
-//        NSLog(@"log");
-//        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"addAlbumsCell" forIndexPath:indexPath];
-//        return cell;
-//    }
+    //    if(indexPath.row == [self.videoAlbumNamesArray count]){
+    //        NSLog(@"log");
+    //        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"addAlbumsCell" forIndexPath:indexPath];
+    //        return cell;
+    //    }
     
-    return imageAlbumNamesCell;
+    return videoAlbumNamesCell;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return [self.imageAlbumNamesArray count];
+    return [self.videoAlbumNamesArray count];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -86,40 +86,40 @@
             DocumentDirsArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             DocumentDir = DocumentDirsArray[0];
             
-            HTImageAlbumTableViewCells *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
-            NSString *directoryName = selectedCell.imageAlbumName.text;
+            HTVideoAlbumTableViewCells *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+            NSString *directoryName = selectedCell.videoAlbumName.text;
             directoryName = [NSString stringWithFormat:@"HA%04d_%@", (int) (indexPath.row + 1), directoryName];
-            DocumentDir = [NSString stringWithFormat:@"%@%@%@%@", DocumentDir, @"/HTHiddenImages/", directoryName, @"/"];
+            DocumentDir = [NSString stringWithFormat:@"%@%@%@%@", DocumentDir, @"/HTHiddenVideos/", directoryName, @"/"];
             NSLog(@"%@", DocumentDir);
             //Remove directory
             [fileManager removeItemAtPath:DocumentDir error:nil];
             //Remove Cell
-            [self.imageAlbumNamesArray removeObjectAtIndex:indexPath.row];
+            [self.videoAlbumNamesArray removeObjectAtIndex:indexPath.row];
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationBottom];
             
             //Rename the other directories
-            if(indexPath.row < [self.imageAlbumNamesArray count]){
-                NSString *tempStringForDirectoryName = selectedCell.imageAlbumName.text;
+            if(indexPath.row < [self.videoAlbumNamesArray count]){
+                NSString *tempStringForDirectoryName = selectedCell.videoAlbumName.text;
                 NSString *tempPathForDirectory = DocumentDir;
-                for(int i = (int) indexPath.row ; i < [self.imageAlbumNamesArray count] ; i++){
+                for(int i = (int) indexPath.row ; i < [self.videoAlbumNamesArray count] ; i++){
                     NSIndexPath *nextCellsIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
-                    HTImageAlbumTableViewCells *cellForChange = [tableView cellForRowAtIndexPath:nextCellsIndexPath];
-                    NSString *directoryWillBeChanged = cellForChange.imageAlbumName.text;
+                    HTVideoAlbumTableViewCells *cellForChange = [tableView cellForRowAtIndexPath:nextCellsIndexPath];
+                    NSString *directoryWillBeChanged = cellForChange.videoAlbumName.text;
                     NSString *destinationPath = [tempPathForDirectory stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"HA%04d_%@/", i+1 ,tempStringForDirectoryName] withString:[NSString stringWithFormat:@"HA%04d_%@/", i+1, directoryWillBeChanged]];
                     NSString *originalPath = [destinationPath stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%04d", i+1] withString:[NSString stringWithFormat:@"%04d", i+2]];
                     //[fileManager createDirectoryAtPath:destinationPath withIntermediateDirectories:YES attributes:nil error:nil];
-//                    NSLog(@"original path %@", originalPath);
-//                    NSLog(@"destination path %@", destinationPath);
-//                    NSError *error;
+                    //                    NSLog(@"original path %@", originalPath);
+                    //                    NSLog(@"destination path %@", destinationPath);
+                    //                    NSError *error;
                     [fileManager moveItemAtPath:originalPath toPath:destinationPath error:nil];
-//                    NSLog(@"%@", error.localizedDescription);
+                    //                    NSLog(@"%@", error.localizedDescription);
                     tempPathForDirectory = originalPath;
                     tempStringForDirectoryName = directoryWillBeChanged;
                 }
             }
         }];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-    
+            
         }];
         
         [albumDeleteAlertController addAction:cancelAction];
@@ -135,28 +135,28 @@
 }
 
 - (IBAction)AddAlbumsBtnTouched:(id)sender {
-    UIAlertController *imageAlbumCreationAlertController = [UIAlertController alertControllerWithTitle:@"Create an Album" message:@"Enter Album Name" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *videoAlbumCreationAlertController = [UIAlertController alertControllerWithTitle:@"Create an Album" message:@"Enter Album Name" preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *createAction = [UIAlertAction actionWithTitle:@"Create" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSString *newAlbumName = [imageAlbumCreationAlertController.textFields firstObject].text;
+        NSString *newAlbumName = [videoAlbumCreationAlertController.textFields firstObject].text;
         if([self checkAllowedName:newAlbumName]){
-            [self.imageAlbumNamesArray addObject:newAlbumName];
-            [self.HTImageAlbumTableView beginUpdates];
-            [self.HTImageAlbumTableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:[self.imageAlbumNamesArray count] - 1 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
-            [self.HTImageAlbumTableView endUpdates];
+            [self.videoAlbumNamesArray addObject:newAlbumName];
+            [self.HTVideoAlbumTableView beginUpdates];
+            [self.HTVideoAlbumTableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:[self.videoAlbumNamesArray count] - 1 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
+            [self.HTVideoAlbumTableView endUpdates];
             
             [self makeDirectoryWithDirectoryName:newAlbumName];
         }
     }];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
     
-    [imageAlbumCreationAlertController addAction:cancelAction];
-    [imageAlbumCreationAlertController addAction:createAction];
+    [videoAlbumCreationAlertController addAction:cancelAction];
+    [videoAlbumCreationAlertController addAction:createAction];
     
-    [imageAlbumCreationAlertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+    [videoAlbumCreationAlertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder = @"Album Name";
     }];
     
-    [self presentViewController:imageAlbumCreationAlertController animated:YES completion:nil];
+    [self presentViewController:videoAlbumCreationAlertController animated:YES completion:nil];
     
 }
 
@@ -172,10 +172,10 @@
         UIAlertAction *createAction = [UIAlertAction actionWithTitle:@"Create" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             NSString *newAlbumName = [alertController.textFields firstObject].text;
             if([self checkAllowedName:newAlbumName]){
-                [self.imageAlbumNamesArray addObject:newAlbumName];
-                [self.HTImageAlbumTableView beginUpdates];
-                [self.HTImageAlbumTableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:[self.imageAlbumNamesArray count] - 1 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
-                [self.HTImageAlbumTableView endUpdates];
+                [self.videoAlbumNamesArray addObject:newAlbumName];
+                [self.HTVideoAlbumTableView beginUpdates];
+                [self.HTVideoAlbumTableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:[self.videoAlbumNamesArray count] - 1 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
+                [self.HTVideoAlbumTableView endUpdates];
                 
                 [self makeDirectoryWithDirectoryName:newAlbumName];
             }
@@ -195,10 +195,10 @@
         UIAlertAction *createAction = [UIAlertAction actionWithTitle:@"Create" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             NSString *newAlbumName = [alertController.textFields firstObject].text;
             if([self checkAllowedName:newAlbumName]){
-                [self.imageAlbumNamesArray addObject:newAlbumName];
-                [self.HTImageAlbumTableView beginUpdates];
-                [self.HTImageAlbumTableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:[self.imageAlbumNamesArray count] - 1 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
-                [self.HTImageAlbumTableView endUpdates];
+                [self.videoAlbumNamesArray addObject:newAlbumName];
+                [self.HTVideoAlbumTableView beginUpdates];
+                [self.HTVideoAlbumTableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:[self.videoAlbumNamesArray count] - 1 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
+                [self.HTVideoAlbumTableView endUpdates];
                 
                 [self makeDirectoryWithDirectoryName:newAlbumName];
             }
@@ -229,7 +229,7 @@
     
     DocumentDirsArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     DocumentDir = DocumentDirsArray[0];
-    DocumentDir = [NSString stringWithFormat:@"%@%@%04d%@%@%@", DocumentDir, @"/HTHiddenImages/HA", (int) [self.imageAlbumNamesArray count] ,@"_" ,  directoryName, @"/"];
+    DocumentDir = [NSString stringWithFormat:@"%@%@%04d%@%@%@", DocumentDir, @"/HTHiddenVideos/HA", (int) [self.videoAlbumNamesArray count] ,@"_" ,  directoryName, @"/"];
     NSString *thumbnailDir = [NSString stringWithFormat:@"%@%@", DocumentDir, @"thumbnail/"];
     NSString *resizeDir = [NSString stringWithFormat:@"%@%@", DocumentDir, @"resize/"];
     NSString *originalDir =[NSString stringWithFormat:@"%@%@", DocumentDir, @"original/"];
@@ -244,12 +244,12 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if([segue.identifier isEqualToString:@"albumSelected"]){
         //Get destination View Controller
-        HTImagePickerViewController *destinationViewController =  segue.destinationViewController;
+        HTVideoPickerViewController *destinationViewController =  segue.destinationViewController;
         //Get selected Cell
-        NSIndexPath *selectedCellIndexPath = [self.HTImageAlbumTableView indexPathForSelectedRow];
-        HTImageAlbumTableViewCells *selectedCell = [self.HTImageAlbumTableView cellForRowAtIndexPath:selectedCellIndexPath];
+        NSIndexPath *selectedCellIndexPath = [self.HTVideoAlbumTableView indexPathForSelectedRow];
+        HTVideoAlbumTableViewCells *selectedCell = [self.HTVideoAlbumTableView cellForRowAtIndexPath:selectedCellIndexPath];
         
-        NSString *directoryName = selectedCell.imageAlbumName.text;
+        NSString *directoryName = selectedCell.videoAlbumName.text;
         
         //Path for directory
         NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -258,13 +258,13 @@
         
         DocumentDirsArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         DocumentDir = DocumentDirsArray[0];
-        DocumentDir = [NSString stringWithFormat:@"%@%@%04d_%@/thumbnail/", DocumentDir, @"/HTHiddenImages/HA", (int) (selectedCellIndexPath.row + 1) ,  directoryName];
+        DocumentDir = [NSString stringWithFormat:@"%@%@%04d_%@/thumbnail/", DocumentDir, @"/HTHiddenVideos/HA", (int) (selectedCellIndexPath.row + 1) ,  directoryName];
         
         destinationViewController.selectedAlbumName = [NSString stringWithFormat:@"HA%04d_%@", (int) (selectedCellIndexPath.row + 1), directoryName];
-        destinationViewController.HTHiddenImagesFileNameArray =[NSMutableArray arrayWithArray:[fileManager contentsOfDirectoryAtPath:DocumentDir error:nil]];
+        destinationViewController.HTHiddenVideosFileNameArray =[NSMutableArray arrayWithArray:[fileManager contentsOfDirectoryAtPath:DocumentDir error:nil]];
         NSLog(@"Document directory path %@", DocumentDir);
         NSLog(@"selected album name %@", destinationViewController.selectedAlbumName);
-        NSLog(@"hidden images %@", destinationViewController.HTHiddenImagesFileNameArray);
+        NSLog(@"hidden videos %@", destinationViewController.HTHiddenVideosFileNameArray);
         
     }
 }
@@ -274,8 +274,8 @@
 
 
 
-@interface HTImageAlbumTableViewCells ()
+@interface HTVideoAlbumTableViewCells ()
 @end
 
-@implementation HTImageAlbumTableViewCells
+@implementation HTVideoAlbumTableViewCells
 @end

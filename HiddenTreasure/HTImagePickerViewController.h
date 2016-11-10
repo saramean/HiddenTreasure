@@ -39,6 +39,7 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *imageDetailCollectionView;
 @property (strong, nonatomic) NSMutableArray<UIImage *> *thumbnailImages;
 @property (strong, nonatomic) NSString *selectedAlbumName;
+@property (strong, nonatomic) UICollectionView *HTImagePickerCollectionView;
 
 - (IBAction)backToPickerBtnTouched:(id)sender;
 @end
