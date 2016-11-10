@@ -44,6 +44,9 @@
     self.HTImagePickerExportBtn.enabled = NO;
     self.HTImagePickerDeleteBtn.hidden = YES;
     self.HTImagePickerDeleteBtn.enabled = NO;
+    if([self.HTHiddenImagesFileNameArray count] == 0){
+        self.HTImagePickerSelectBtn.enabled = NO;
+    }
     
     //Configure DetailView
     self.HTImageDetailView.frame = self.view.frame;
@@ -128,7 +131,7 @@
         [self selectedCellLayoutChange:selectedCell];
         [self.selectedImages addObject:indexPath];
         [self.selectedImagesIndex addIndex:indexPath.row];
-        NSLog(@"selected %@", self.selectedImages);
+        NSLog(@"selected indexPath %@ index %@", self.selectedImages, self.selectedImagesIndex);
         if([self.selectedImages count] > 0){
             self.HTImagePickerExportBtn.enabled = YES;
             self.HTImagePickerDeleteBtn.enabled = YES;
@@ -143,14 +146,14 @@
         for(int i = 0 ; i < [self.selectedImages count] ; i++){
             if(self.selectedImages[i] == indexPath){
                 [self.selectedImages removeObjectAtIndex:i];
-                [self.selectedImagesIndex removeIndex:i];
+                [self.selectedImagesIndex removeIndex:indexPath.row];
             }
         }
         if([self.selectedImages count] == 0){
             self.HTImagePickerExportBtn.enabled = NO;
             self.HTImagePickerDeleteBtn.enabled = NO;
         }
-        NSLog(@"after deselected %@", self.selectedImages);
+        NSLog(@"after deselected %@ index %@", self.selectedImages, self.selectedImagesIndex);
     }
 }
 
@@ -273,6 +276,9 @@
 //                
 //            }];
 //        }];
+    }
+    if([self.HTHiddenImagesFileNameArray count] > 0){
+        self.HTImagePickerSelectBtn.enabled = YES;
     }
 }
 
@@ -400,6 +406,35 @@
 }
 
 - (IBAction)exportImagesBtnTouched:(id)sender {
+    //Directory paths
+    NSString *DocumentDir;
+    NSArray *DocumentDirsArray;
+    DocumentDirsArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    DocumentDir = DocumentDirsArray[0];
+    DocumentDir = [NSString stringWithFormat:@"%@%@%@/", DocumentDir, @"/HTHiddenImages/", self.selectedAlbumName];
+    NSString *trimmedAlbumName = [self.selectedAlbumName substringFromIndex:7];
+    for(int i = 0; i < [self.selectedImages count]; i++){
+        //Path for directories
+        NSString *fileName = [NSString stringWithFormat:@"%@_HI%04d.jpg", trimmedAlbumName, (int) self.selectedImages[i].row + 1];
+        NSString *originalDir = [NSString stringWithFormat:@"%@%@%@", DocumentDir, @"original/", fileName];
+        UIImage *exportImage = [UIImage imageWithContentsOfFile:originalDir];
+        //Save Image to PhotoLibrary
+        UIImageWriteToSavedPhotosAlbum(exportImage, nil, nil, nil);
+        //Deselect cells
+        [self.HTImagePickerCollectionView deselectItemAtIndexPath:self.selectedImages[i] animated:YES];
+        [self collectionView:self.HTImagePickerCollectionView didDeselectItemAtIndexPath:self.selectedImages[i]];
+    }
+    [self.selectedImages removeAllObjects];
+    [self.selectedImagesIndex removeAllIndexes];
+    self.HTImagePickerCollectionView.allowsMultipleSelection = NO;
+    self.HTImagePickerAddBtn.hidden = NO;
+    self.HTImagePickerBackBtn.hidden = NO;
+    self.HTImagePickerCancelBtn.hidden = YES;
+    self.HTImagePickerSelectBtn.hidden = NO;
+    self.HTImagePickerExportBtn.hidden = YES;
+    self.HTImagePickerExportBtn.enabled = NO;
+    self.HTImagePickerDeleteBtn.hidden = YES;
+    self.HTImagePickerDeleteBtn.enabled = NO;
 }
 
 - (IBAction)deleteImagesBtnTouched:(id)sender {
@@ -463,7 +498,11 @@
             }
         }
         [self.selectedImages removeAllObjects];
+        [self.selectedImagesIndex removeAllIndexes];
     }];
+    if([self.HTHiddenImagesFileNameArray count] == 0){
+        self.HTImagePickerSelectBtn.enabled = NO;
+    }
 }
 
 
