@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		4E110F4C1DD43FA3008E6F33 /* HTVideoAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E110F4B1DD43FA3008E6F33 /* HTVideoAlbumViewController.m */; };
 		4E110F4F1DD4400E008E6F33 /* HTVideoPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E110F4E1DD4400E008E6F33 /* HTVideoPickerViewController.m */; };
+		4E2B26D51DD5CF9E00FF8266 /* HTMemoListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E2B26D41DD5CF9E00FF8266 /* HTMemoListViewController.m */; };
+		4E2B26D81DD5E29B00FF8266 /* HTMemoEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E2B26D71DD5E29B00FF8266 /* HTMemoEditViewController.m */; };
 		4EDD84B71DD00B4B001CEE8B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDD84B61DD00B4B001CEE8B /* main.m */; };
 		4EDD84BA1DD00B4B001CEE8B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDD84B91DD00B4B001CEE8B /* AppDelegate.m */; };
 		4EDD84BD1DD00B4B001CEE8B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDD84BC1DD00B4B001CEE8B /* ViewController.m */; };
@@ -39,6 +41,10 @@
 		4E110F4B1DD43FA3008E6F33 /* HTVideoAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTVideoAlbumViewController.m; sourceTree = "<group>"; };
 		4E110F4D1DD4400E008E6F33 /* HTVideoPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTVideoPickerViewController.h; sourceTree = "<group>"; };
 		4E110F4E1DD4400E008E6F33 /* HTVideoPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTVideoPickerViewController.m; sourceTree = "<group>"; };
+		4E2B26D31DD5CF9E00FF8266 /* HTMemoListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTMemoListViewController.h; sourceTree = "<group>"; };
+		4E2B26D41DD5CF9E00FF8266 /* HTMemoListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTMemoListViewController.m; sourceTree = "<group>"; };
+		4E2B26D61DD5E29B00FF8266 /* HTMemoEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTMemoEditViewController.h; sourceTree = "<group>"; };
+		4E2B26D71DD5E29B00FF8266 /* HTMemoEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTMemoEditViewController.m; sourceTree = "<group>"; };
 		4EDD84B21DD00B4B001CEE8B /* HiddenTreasure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HiddenTreasure.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EDD84B61DD00B4B001CEE8B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4EDD84B81DD00B4B001CEE8B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -123,6 +129,17 @@
 			name = HTVideo;
 			sourceTree = "<group>";
 		};
+		4E2B26D91DD5E2AA00FF8266 /* HTMemo */ = {
+			isa = PBXGroup;
+			children = (
+				4E2B26D61DD5E29B00FF8266 /* HTMemoEditViewController.h */,
+				4E2B26D71DD5E29B00FF8266 /* HTMemoEditViewController.m */,
+				4E2B26D31DD5CF9E00FF8266 /* HTMemoListViewController.h */,
+				4E2B26D41DD5CF9E00FF8266 /* HTMemoListViewController.m */,
+			);
+			name = HTMemo;
+			sourceTree = "<group>";
+		};
 		4EDD84A91DD00B4B001CEE8B = {
 			isa = PBXGroup;
 			children = (
@@ -152,6 +169,7 @@
 				4E110F481DD43F4B008E6F33 /* HTWeb */,
 				4E110F471DD43F33008E6F33 /* HTImage */,
 				4EDD84BE1DD00B4B001CEE8B /* Main.storyboard */,
+				4E2B26D91DD5E2AA00FF8266 /* HTMemo */,
 				4EDD84E81DD0410F001CEE8B /* HTHideInfoViewController.h */,
 				4EDD84E91DD0410F001CEE8B /* HTHideInfoViewController.m */,
 				4EDD84E51DD0372E001CEE8B /* HTAuthenticationViewController.h */,
@@ -281,6 +299,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E2B26D81DD5E29B00FF8266 /* HTMemoEditViewController.m in Sources */,
 				4EDD84BD1DD00B4B001CEE8B /* ViewController.m in Sources */,
 				4EDD84BA1DD00B4B001CEE8B /* AppDelegate.m in Sources */,
 				4E110F4F1DD4400E008E6F33 /* HTVideoPickerViewController.m in Sources */,
@@ -299,6 +318,7 @@
 				4E110F4C1DD43FA3008E6F33 /* HTVideoAlbumViewController.m in Sources */,
 				4EDD850C1DD090AC001CEE8B /* FTImagePickerCells.m in Sources */,
 				4EDD84DD1DD013BD001CEE8B /* HTTutorialPageContentsViewController.m in Sources */,
+				4E2B26D51DD5CF9E00FF8266 /* HTMemoListViewController.m in Sources */,
 				4EDD84EA1DD0410F001CEE8B /* HTHideInfoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -14,6 +14,7 @@
 
 @implementation HTVideoAlbumViewController
 
+//Album will be stored in DocumentDir/HTHiddenVideos/HA####_AlbumName/
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -220,6 +221,7 @@
 
 //Make Directory for albums
 //Name Format of directory will be HA####_AlbumName(#### is 4 digit integer value)
+//'/' cannot be used as a album name
 //Count For naming directory
 - (void) makeDirectoryWithDirectoryName: (NSString *) directoryName{
     //Path for directory

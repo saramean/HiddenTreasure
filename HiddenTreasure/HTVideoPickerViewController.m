@@ -14,6 +14,13 @@
 
 @implementation HTVideoPickerViewController
 
+//Album will be stored in DocumentDir/HTHiddenVideos/HA####_AlbumName/
+//In album directories, there are three directories each for thumbnail, resizeImage(For preview), originalVideo
+//File hierachy will be like below
+//DocumentDir/HTHiddenImages/HA####_AlbumName/thumnail/AlbumName_HV####.jpg
+//DocumentDir/HTHiddenImages/HA####_AlbumName/resize/AlbumName_HV####.jpg
+//DocumentDir/HTHiddenImages/HA####_AlbumName/original/AlbumName_HV####.mp4
+//#### in directory and #### in file name are diffrent number each other.
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -232,6 +239,9 @@
 }
 
 #pragma mark - ImagePicker delegate
+//Format of video file is AlbumName_HV####.mp4
+//There are two more images files for video files to show thumbnail and preview
+//Their names are AlbumName_HV####.jpg
 - (void)getSelectedImageAssetsFromImagePicker:(NSMutableArray *)selectedAssetsArray{
     UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] init];
     indicator.center = self.view.center;

@@ -14,6 +14,13 @@
 
 @implementation HTImagePickerViewController
 
+//Album will be stored in DocumentDir/HTHiddenImages/HA####_AlbumName/
+//In album directories, there are three directories each for thumbnail, resizeImage(For preview), originalImage
+//File hierachy will be like below
+//DocumentDir/HTHiddenImages/HA####_AlbumName/thumnail/AlbumName_HI####.jpg
+//DocumentDir/HTHiddenImages/HA####_AlbumName/resize/AlbumName_HI####.jpg
+//DocumentDir/HTHiddenImages/HA####_AlbumName/original/AlbumName_HI####.jpg
+//#### in directory and #### in file name are diffrent number each other.
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -193,6 +200,7 @@
 }
 
 #pragma mark - ImagePicker delegate
+//Format of Image file is AlbumName_HI####.jpg
 - (void)getSelectedImageAssetsFromImagePicker:(NSMutableArray *)selectedAssetsArray{
     //Directory paths
     NSString *DocumentDir;
