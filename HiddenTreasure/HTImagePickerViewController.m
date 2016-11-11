@@ -205,7 +205,6 @@
     synchronousOptions.synchronous = YES;
     
     for(PHAsset* selectedAsset in selectedAssetsArray){
-        
         [[PHImageManager defaultManager] requestImageDataForAsset:selectedAsset options:synchronousOptions resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
             //Get path for image saving
             //Path for directories
@@ -225,14 +224,6 @@
                     NSData *thumbnailImageData = [NSData dataWithData:UIImageJPEGRepresentation(thumbnail, 1.0)];
                     [thumbnailImageData writeToFile:thumbnailDir atomically:YES];
                 }
-                [self.HTImagePickerCollectionView performBatchUpdates:^{
-                    [self.thumbnailImages addObject:thumbnail];
-                    [self.HTHiddenImagesFileNameArray addObject:fileName];
-                    [self.HTImagePickerCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:[self.thumbnailImages count] - 1 inSection:0]]];
-                    [self.HTImageDetailView.imageDetailCollectionView reloadData];
-                } completion:^(BOOL finished) {
-                    
-                }];
                 //Save resize image
                 [[PHImageManager defaultManager] requestImageForAsset:selectedAsset targetSize:CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.width) contentMode:PHImageContentModeAspectFit options:synchronousOptions resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
                     UIImage *resize = result;
@@ -241,45 +232,13 @@
                         [resizeImageData writeToFile:resizeDir atomically:YES];
                     }
                 }];
+                [self.thumbnailImages addObject:thumbnail];
+                [self.HTHiddenImagesFileNameArray addObject:fileName];
             }];
         }];
-    
-        
-//        [[PHImageManager defaultManager] requestImageDataForAsset:selectedAsset options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
-//            //Get path for image saving
-//            //Path for directories
-//            NSString *trimmedAlbumName = [self.selectedAlbumName substringFromIndex:7];
-//            NSString *fileName = [NSString stringWithFormat:@"%@_HI%04d.jpg", trimmedAlbumName, (int) [self.thumbnailImages count] + 1];
-//            NSString *thumbnailDir = [NSString stringWithFormat:@"%@%@%@", DocumentDir, @"thumbnail/", fileName];
-//            NSString *resizeDir = [NSString stringWithFormat:@"%@%@%@", DocumentDir, @"resize/", fileName];
-//            NSString *originalDir = [NSString stringWithFormat:@"%@%@%@", DocumentDir, @"original/", fileName];
-//            NSLog(@"%@", originalDir);
-//            //save original image
-//            NSData *originalImageData = imageData;
-//            [originalImageData writeToFile:originalDir atomically:YES];
-//            //resize image process
-//            UIImage *originalImage = [UIImage imageWithData:imageData];
-//            //Change image orientation to 0
-//            originalImage = [self fixImageOrientation:originalImage];
-//            //resize image and save
-//            UIImage *thumbnailImage = [self scaleToSize:CGSizeMake(240, 240 * originalImage.size.height/originalImage.size.width) withImage:originalImage];
-//            NSData *thumbnailImageData = [NSData dataWithData:UIImageJPEGRepresentation(thumbnailImage, 1.0)];
-//            [thumbnailImageData writeToFile:thumbnailDir atomically:YES];
-//            
-//            UIImage *resizeImage = [self scaleToSize:CGSizeMake(self.view.frame.size.width * 3, self.view.frame.size.width * 3 * originalImage.size.height/originalImage.size.width) withImage:originalImage];
-//            NSData *resizeImageData = [NSData dataWithData:UIImageJPEGRepresentation(resizeImage, 1.0)];
-//            [resizeImageData writeToFile:resizeDir atomically:YES];
-//            
-//            
-//            //Perform update of collectionview
-//            [self.HTImagePickerCollectionView performBatchUpdates:^{
-//                [self.thumbnailImages addObject:thumbnailImage];
-//                [self.HTImagePickerCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:[self.thumbnailImages count] - 1 inSection:0]]];
-//            } completion:^(BOOL finished) {
-//                
-//            }];
-//        }];
     }
+    [self.HTImagePickerCollectionView reloadData];
+    [self.HTImageDetailView.imageDetailCollectionView reloadData];
     if([self.HTHiddenImagesFileNameArray count] > 0){
         self.HTImagePickerSelectBtn.enabled = YES;
     }

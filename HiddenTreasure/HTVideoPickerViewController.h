@@ -9,13 +9,19 @@
 #import <UIKit/UIKit.h>
 #import "FTImagePicker.h"
 @import Photos;
+@import AVKit;
 @class HTVideoDetailView;
 
-@interface HTVideoPickerViewController : UIViewController<UICollectionViewDelegate, UICollectionViewDataSource, FTImagePickerViewControllerDelegate, UICollectionViewDelegateFlowLayout>
+@protocol HTVideoDetailViewDelegate <NSObject>
+- (void) presentAVPlayerViewController: (AVPlayerViewController *) AVPlayerViewController AVPlayer:(AVPlayer *) AVPlayer;
+@end
+
+@interface HTVideoPickerViewController : UIViewController<UICollectionViewDelegate, UICollectionViewDataSource, FTImagePickerViewControllerDelegate, UICollectionViewDelegateFlowLayout, HTVideoDetailViewDelegate>
 
 @property (strong, nonatomic) NSString *selectedAlbumName;
 @property (strong, nonatomic) NSMutableArray<NSString *> *HTHiddenVideosFileNameArray;
 @property (strong, nonatomic) NSMutableArray<UIImage *> *thumbnailImages;
+@property (strong, nonatomic) NSMutableArray<NSNumber *> *videoLength;
 @property (weak, nonatomic) IBOutlet UICollectionView *HTVideoPickerCollectionView;
 @property (strong, nonatomic) IBOutlet HTVideoDetailView *HTVideoDetailView;
 @property (weak, nonatomic) IBOutlet UIButton *HTVideoPickerBackBtn;
@@ -35,17 +41,23 @@
 - (IBAction)deleteVideosBtnTouched:(id)sender;
 @end
 
+
+
 @interface HTVideoDetailView : UIView <UICollectionViewDataSource, UICollectionViewDataSource, UIScrollViewDelegate, UICollectionViewDelegateFlowLayout>
 @property (weak, nonatomic) IBOutlet UICollectionView *videoDetailCollectionView;
 @property (strong, nonatomic) NSMutableArray<UIImage *> *thumbnailImages;
 @property (strong, nonatomic) NSString *selectedAlbumName;
 @property (strong, nonatomic) UICollectionView *HTVideoPickerCollectionView;
+@property (weak, nonatomic) IBOutlet UIButton *videoPlayBtn;
+@property (weak, nonatomic) id<HTVideoDetailViewDelegate> delegate;
 
+- (IBAction)videoPlayBtnTouched:(id)sender;
 - (IBAction)backToPickerBtnTouched:(id)sender;
 @end
 
 @interface HTVideoPickerCollectionViewCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *thumbnail;
+@property (weak, nonatomic) IBOutlet UILabel *videoLength;
 @end
 
 @interface HTVideoDetailCollectionViewCell : UICollectionViewCell

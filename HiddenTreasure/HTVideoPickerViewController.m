@@ -25,6 +25,7 @@
     DocumentDir = DocumentDirsArray[0];
     DocumentDir = [NSString stringWithFormat:@"%@%@%@/", DocumentDir, @"/HTHiddenVideos/", self.selectedAlbumName];
     NSString *thumbnailDir = [NSString stringWithFormat:@"%@%@", DocumentDir, @"thumbnail/"];
+    NSString *videoLenghtDataPath = [NSString stringWithFormat:@"%@%@", DocumentDir, @"videoLength.json"];
     
     if(!self.thumbnailImages){
         self.thumbnailImages = [[NSMutableArray alloc] init];
@@ -32,8 +33,13 @@
     if(!self.selectedVideos){
         self.selectedVideos = [[NSMutableArray alloc] init];
         self.selectedVideosIndex = [[NSMutableIndexSet alloc] init];
+        self.videoLength = [[NSMutableArray alloc] init];
     }
     
+    NSData *videoLengthData = [NSData dataWithContentsOfFile:videoLenghtDataPath];
+    if(videoLengthData){
+        self.videoLength = [NSMutableArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:videoLengthData options:kNilOptions error:nil]];
+    }
     for(int i = 0; i < [self.HTHiddenVideosFileNameArray count] ; i++){
         UIImage *temp = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@%@", thumbnailDir, self.HTHiddenVideosFileNameArray[i]]];
         [self.thumbnailImages addObject:temp];
@@ -53,6 +59,10 @@
     self.HTVideoDetailView.thumbnailImages = self.thumbnailImages;
     self.HTVideoDetailView.selectedAlbumName = self.selectedAlbumName;
     self.HTVideoDetailView.HTVideoPickerCollectionView = self.HTVideoPickerCollectionView;
+    self.HTVideoDetailView.delegate = self;
+    
+    //Notification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveVideoLength) name:UIApplicationWillTerminateNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -60,16 +70,44 @@
     // Dispose of any resources that can be recreated.
     NSLog(@"warning");
 }
+#pragma mark - Save videoLength file
+- (void) saveVideoLength{
+    // Do any additional setup after loading the view.
+    //Path for directory
+    NSString *DocumentDir;
+    NSArray *DocumentDirsArray;
+    
+    DocumentDirsArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    DocumentDir = DocumentDirsArray[0];
+    DocumentDir = [NSString stringWithFormat:@"%@%@%@/", DocumentDir, @"/HTHiddenVideos/", self.selectedAlbumName];
+    NSString *videoLenghtDataPath = [NSString stringWithFormat:@"%@%@", DocumentDir, @"videoLength.json"];
+    NSData *videoLengthData = [NSJSONSerialization dataWithJSONObject:self.videoLength options:kNilOptions error:nil];
+    [videoLengthData writeToFile:videoLenghtDataPath atomically:YES];
+}
+
+#pragma mark - Collection view delegate
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return [self.thumbnailImages count];
 }
 
-
-#pragma Collection view delegate
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     HTVideoPickerCollectionViewCell *thumbnailCells = [collectionView dequeueReusableCellWithReuseIdentifier:@"HTVideoPickerCollectionViewCell" forIndexPath:indexPath];
-    
+    float videoLengthInSeconds = [self.videoLength[indexPath.row] floatValue];
+    int lengthHour = 0;
+    int lengthMin = 0;
+    NSString *videoLength;
+    int lengthSecond = (int) videoLengthInSeconds % 60;
+    if(videoLengthInSeconds/60 >= 60){
+        lengthMin = ((int)videoLengthInSeconds / 60) % 60;
+        lengthHour = ((int)videoLengthInSeconds / 60) / 60;
+        videoLength = [NSString stringWithFormat:@"%02d:%02d:%02d", lengthHour, lengthMin, lengthSecond];
+    }
+    else{
+        lengthMin = (int)videoLengthInSeconds / 60;
+        videoLength = [NSString stringWithFormat:@"%02d:%02d", lengthMin, lengthSecond];
+    }
+    thumbnailCells.videoLength.text = videoLength;
     if(thumbnailCells.selected){
         [self selectedCellLayoutChange:thumbnailCells];
     }
@@ -175,6 +213,7 @@
 
 #pragma mark - Back to Album
 - (IBAction)backToAlbumBtnTouched:(id)sender {
+    [self saveVideoLength];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -194,6 +233,11 @@
 
 #pragma mark - ImagePicker delegate
 - (void)getSelectedImageAssetsFromImagePicker:(NSMutableArray *)selectedAssetsArray{
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] init];
+    indicator.center = self.view.center;
+    [self.view addSubview:indicator];
+    [indicator startAnimating];
+    indicator.hidden = NO;
     //Directory paths
     NSString *DocumentDir;
     NSArray *DocumentDirsArray;
@@ -203,47 +247,61 @@
     DocumentDir = [NSString stringWithFormat:@"%@%@%@/", DocumentDir, @"/HTHiddenVideos/", self.selectedAlbumName];
     PHImageRequestOptions *synchronousOptions = [[PHImageRequestOptions alloc] init];
     synchronousOptions.synchronous = YES;
-    
-    for(PHAsset* selectedAsset in selectedAssetsArray){
-        [[PHImageManager defaultManager] requestImageDataForAsset:selectedAsset options:synchronousOptions resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
-            //Get path for image saving
+    PHVideoRequestOptions *videoRequestOptions = [[PHVideoRequestOptions alloc] init];
+    videoRequestOptions.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;
+    int thumnailCountBeforeAdd = (int) [self.thumbnailImages count];
+    for(int i = 0; i < [selectedAssetsArray count]; i++){
+        NSLog(@"%d", i);
+        PHAsset *selectedAsset = selectedAssetsArray[i];
+        //NSLog(@"%@", originalDir);
+        [[PHImageManager defaultManager] requestExportSessionForVideo:selectedAsset options:videoRequestOptions exportPreset:AVAssetExportPresetHighestQuality resultHandler:^(AVAssetExportSession * _Nullable exportSession, NSDictionary * _Nullable info) {
+            //Get path for video saving
             //Path for directories
             NSString *trimmedAlbumName = [self.selectedAlbumName substringFromIndex:7];
-            NSString *fileName = [NSString stringWithFormat:@"%@_HV%04d.jpg", trimmedAlbumName, (int) [self.thumbnailImages count] + 1];
-            NSString *fileNameForVideo = [NSString stringWithFormat:@"%@_HV%04d.mp4", trimmedAlbumName, (int) [self.thumbnailImages count] + 1];
+            NSString *fileNameForVideo = [NSString stringWithFormat:@"%@_HV%04d.mp4", trimmedAlbumName, thumnailCountBeforeAdd + 1 + i];
+            NSString *originalDir = [NSString stringWithFormat:@"%@%@%@", DocumentDir, @"original/", fileNameForVideo];
+            //save original video
+            exportSession.outputURL = [NSURL fileURLWithPath:originalDir];
+            exportSession.outputFileType = AVFileTypeMPEG4;
+            [exportSession exportAsynchronouslyWithCompletionHandler:^{
+                NSLog(@"file %@", originalDir);
+                NSLog(@"status %d", (int) exportSession.status);
+                NSLog(@"error %@", exportSession.error.localizedDescription);
+                if(i == [selectedAssetsArray count] -1){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [indicator removeFromSuperview];
+                    });
+                }
+            }];
+        }];
+        //Save Thumbnail
+        [[PHImageManager defaultManager] requestImageForAsset:selectedAsset targetSize:CGSizeMake(150, 150) contentMode:PHImageContentModeAspectFit options:synchronousOptions resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+            //Get path for video saving
+            //Path for directories
+            NSString *trimmedAlbumName = [self.selectedAlbumName substringFromIndex:7];
+            NSString *fileName = [NSString stringWithFormat:@"%@_HV%04d.jpg", trimmedAlbumName, thumnailCountBeforeAdd + 1 + i];
             NSString *thumbnailDir = [NSString stringWithFormat:@"%@%@%@", DocumentDir, @"thumbnail/", fileName];
             NSString *resizeDir = [NSString stringWithFormat:@"%@%@%@", DocumentDir, @"resize/", fileName];
-            NSString *originalDir = [NSString stringWithFormat:@"%@%@%@", DocumentDir, @"original/", fileNameForVideo];
-            //NSLog(@"%@", originalDir);
-            //save original video
-            NSData *originalVideoData = imageData;
-            [originalVideoData writeToFile:originalDir atomically:YES];
-            //Save Thumbnail
-            [[PHImageManager defaultManager] requestImageForAsset:selectedAsset targetSize:CGSizeMake(150, 150) contentMode:PHImageContentModeAspectFit options:synchronousOptions resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-                UIImage *thumbnail = result;
+            UIImage *thumbnail = result;
+            [self.thumbnailImages addObject:thumbnail];
+            [self.videoLength addObject:[NSNumber numberWithFloat:selectedAsset.duration]];
+            [self.HTHiddenVideosFileNameArray addObject:fileName];
+            @autoreleasepool {
+                NSData *thumbnailImageData = [NSData dataWithData:UIImageJPEGRepresentation(thumbnail, 1.0)];
+                [thumbnailImageData writeToFile:thumbnailDir atomically:YES];
+            }
+            //Save resize image
+            [[PHImageManager defaultManager] requestImageForAsset:selectedAsset targetSize:CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.width) contentMode:PHImageContentModeAspectFit options:synchronousOptions resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+                UIImage *resize = result;
                 @autoreleasepool {
-                    NSData *thumbnailImageData = [NSData dataWithData:UIImageJPEGRepresentation(thumbnail, 1.0)];
-                    [thumbnailImageData writeToFile:thumbnailDir atomically:YES];
+                    NSData *resizeImageData = [NSData dataWithData:UIImageJPEGRepresentation(resize, 1.0)];
+                    [resizeImageData writeToFile:resizeDir atomically:YES];
                 }
-                [self.HTVideoPickerCollectionView performBatchUpdates:^{
-                    [self.thumbnailImages addObject:thumbnail];
-                    [self.HTHiddenVideosFileNameArray addObject:fileName];
-                    [self.HTVideoPickerCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:[self.thumbnailImages count] - 1 inSection:0]]];
-                    [self.HTVideoDetailView.videoDetailCollectionView reloadData];
-                } completion:^(BOOL finished) {
-                    
-                }];
-                //Save resize image
-                [[PHImageManager defaultManager] requestImageForAsset:selectedAsset targetSize:CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.width) contentMode:PHImageContentModeAspectFit options:synchronousOptions resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-                    UIImage *resize = result;
-                    @autoreleasepool {
-                        NSData *resizeImageData = [NSData dataWithData:UIImageJPEGRepresentation(resize, 1.0)];
-                        [resizeImageData writeToFile:resizeDir atomically:YES];
-                    }
-                }];
             }];
         }];
     }
+    [self.HTVideoPickerCollectionView reloadData];
+    [self.HTVideoDetailView.videoDetailCollectionView reloadData];
     if([self.HTHiddenVideosFileNameArray count] > 0){
         self.HTVideoPickerSelectBtn.enabled = YES;
     }
@@ -256,6 +314,7 @@
 }
 
 
+#pragma mark - Button Actions
 - (IBAction)selectVideosBtnTouched:(id)sender {
     self.HTVideoPickerCollectionView.allowsMultipleSelection = YES;
     self.HTVideoPickerAddBtn.hidden = YES;
@@ -283,6 +342,8 @@
 }
 
 - (IBAction)exportVideosBtnTouched:(id)sender {
+    //Array for export images
+    NSMutableArray *arrayForExport = [[NSMutableArray alloc] init];
     //Directory paths
     NSString *DocumentDir;
     NSArray *DocumentDirsArray;
@@ -292,15 +353,16 @@
     NSString *trimmedAlbumName = [self.selectedAlbumName substringFromIndex:7];
     for(int i = 0; i < [self.selectedVideos count]; i++){
         //Path for directories
-        NSString *fileName = [NSString stringWithFormat:@"%@_HV%04d.jpg", trimmedAlbumName, (int) self.selectedVideos[i].row + 1];
+        NSString *fileName = [NSString stringWithFormat:@"%@_HV%04d.mp4", trimmedAlbumName, (int) self.selectedVideos[i].row + 1];
         NSString *originalDir = [NSString stringWithFormat:@"%@%@%@", DocumentDir, @"original/", fileName];
-        UIImage *exportVideo = [UIImage imageWithContentsOfFile:originalDir];
-        //Save Image to PhotoLibrary
-        UIImageWriteToSavedPhotosAlbum(exportVideo, nil, nil, nil);
-        //Deselect cells
-        [self.HTVideoPickerCollectionView deselectItemAtIndexPath:self.selectedVideos[i] animated:YES];
-        [self collectionView:self.HTVideoPickerCollectionView didDeselectItemAtIndexPath:self.selectedVideos[i]];
+        NSLog(@"%@", originalDir);
+        NSURL *exportVideo = [NSURL fileURLWithPath:originalDir];
+        [arrayForExport addObject:exportVideo];
     }
+    //UIActivityViewController
+    UIActivityViewController *activityForSharing = [[UIActivityViewController alloc] initWithActivityItems:arrayForExport applicationActivities:nil];
+    [self presentViewController:activityForSharing animated:YES completion:nil];
+    [self.HTVideoPickerCollectionView reloadItemsAtIndexPaths:self.selectedVideos];
     [self.selectedVideos removeAllObjects];
     [self.selectedVideosIndex removeAllIndexes];
     self.HTVideoPickerCollectionView.allowsMultipleSelection = NO;
@@ -364,8 +426,8 @@
                 NSString *destinationFileForThumbnail= [NSString stringWithFormat:@"%@%@%@_HV%04d.jpg", DocumentDir, @"thumbnail/", trimmedAlbumName, i+1];
                 NSString *originalFileForResize = [NSString stringWithFormat:@"%@%@%@_HV%04d.jpg", DocumentDir, @"resize/", trimmedAlbumName, nearBlankInt];
                 NSString *destinationFileForResize= [NSString stringWithFormat:@"%@%@%@_HV%04d.jpg", DocumentDir, @"resize/", trimmedAlbumName, i+1];
-                NSString *originalFileForOriginal = [NSString stringWithFormat:@"%@%@%@_HV%04d.jpg", DocumentDir, @"original/", trimmedAlbumName, nearBlankInt];
-                NSString *destinationFileForOriginal = [NSString stringWithFormat:@"%@%@%@_HV%04d.jpg", DocumentDir, @"original/", trimmedAlbumName, i+1];
+                NSString *originalFileForOriginal = [NSString stringWithFormat:@"%@%@%@_HV%04d.mp4", DocumentDir, @"original/", trimmedAlbumName, nearBlankInt];
+                NSString *destinationFileForOriginal = [NSString stringWithFormat:@"%@%@%@_HV%04d.mp4", DocumentDir, @"original/", trimmedAlbumName, i+1];
                 [fileManager moveItemAtPath:originalFileForThumbnail toPath:destinationFileForThumbnail error:nil];
                 [fileManager moveItemAtPath:originalFileForResize toPath:destinationFileForResize error:nil];
                 [fileManager moveItemAtPath:originalFileForOriginal toPath:destinationFileForOriginal error:nil];
@@ -382,6 +444,13 @@
     }
 }
 
+#pragma mark - DetailView Delegate
+- (void)presentAVPlayerViewController:(AVPlayerViewController *)AVPlayerViewController AVPlayer:(AVPlayer *)AVPlayer{
+    [self presentViewController:AVPlayerViewController animated:YES completion:^{
+        [AVPlayerViewController.player play];
+    }];
+}
+
 
 @end
 
@@ -389,7 +458,7 @@
 
 @end
 @implementation HTVideoDetailView
-
+#pragma mark- CollectionView delegate
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return [self.thumbnailImages count];
 }
@@ -416,17 +485,18 @@
     detailViewCell.detailViewScrollView.minimumZoomScale = 1.0;
     detailViewCell.detailViewScrollView.zoomScale = 1.0;
     //frame setting
-    detailViewCell.detailViewScrollView.frame = CGRectMake(0, 0, self.videoDetailCollectionView.frame.size.width, self.videoDetailCollectionView.frame.size.height);
-    detailViewCell.detailViewScrollView.contentSize = CGSizeMake(self.videoDetailCollectionView.frame.size.width, self.videoDetailCollectionView.frame.size.height);
-    detailViewCell.detailViewImageView.frame = CGRectMake(0, 0, self.videoDetailCollectionView.frame.size.width, self.videoDetailCollectionView.frame.size.height);
-    
-    //NSLog(@"cell size %f %f", detailViewCell.frame.size.width, detailViewCell.frame.size.height);
-    NSLog(@"scrollview size %f %f", detailViewCell.detailViewScrollView.frame.size.width, detailViewCell.detailViewScrollView.frame.size.height);
-    NSLog(@"scrollview zoom scale %f, %d", detailViewCell.detailViewScrollView.zoomScale, detailViewCell.detailViewScrollView.zooming);
+    detailViewCell.detailViewScrollView.frame = CGRectMake(0, 0, detailViewCell.frame.size.width, detailViewCell.frame.size.height);
+    detailViewCell.detailViewScrollView.contentSize = CGSizeMake(detailViewCell.frame.size.width, detailViewCell.frame.size.height);
+    detailViewCell.detailViewImageView.frame = detailViewCell.detailViewScrollView.bounds;
     
     return detailViewCell;
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    return self.videoDetailCollectionView.frame.size;
+}
+
+#pragma mark - scrollview delegate
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
     for(UIView *view in [scrollView subviews]){
         if([view isKindOfClass:[UIImageView class]]){
@@ -436,8 +506,38 @@
     return nil;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return self.videoDetailCollectionView.frame.size;
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    self.videoPlayBtn.enabled = NO;
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    self.videoPlayBtn.enabled = YES;
+}
+
+#pragma mark - Button Actions
+- (IBAction)videoPlayBtnTouched:(id)sender {
+    //Directory paths
+    NSString *DocumentDir;
+    NSArray *DocumentDirsArray;
+    DocumentDirsArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    DocumentDir = DocumentDirsArray[0];
+    DocumentDir = [NSString stringWithFormat:@"%@%@%@/", DocumentDir, @"/HTHiddenVideos/", self.selectedAlbumName];
+    NSString *trimmedAlbumName = [self.selectedAlbumName substringFromIndex:7];
+    NSArray *videoIndexPaths = [self.videoDetailCollectionView indexPathsForVisibleItems];
+    NSIndexPath *videoIndexPath = [videoIndexPaths firstObject];
+    //Path for directories
+    NSString *fileName = [NSString stringWithFormat:@"%@_HV%04d.mp4", trimmedAlbumName, (int) videoIndexPath.row + 1];
+    NSString *originalDir = [NSString stringWithFormat:@"%@%@%@", DocumentDir, @"original/", fileName];
+    NSURL *videoURL = [NSURL fileURLWithPath:originalDir];
+    NSLog(@"%@", [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[NSString stringWithFormat:@"%@%@", DocumentDir, @"original/"] error:nil]);
+    //AVPlayer
+    AVPlayerViewController *videoPlayerViewController = [[AVPlayerViewController alloc] init];
+    AVPlayerItem *playItem = [AVPlayerItem playerItemWithURL:videoURL];
+    AVPlayer *videoPlayer = [[AVPlayer alloc] initWithPlayerItem:playItem];
+    videoPlayerViewController.player = videoPlayer;
+    [videoPlayerViewController.view setFrame:self.bounds];
+    videoPlayerViewController.showsPlaybackControls = YES;
+    [self.delegate presentAVPlayerViewController:videoPlayerViewController AVPlayer:videoPlayer];
 }
 
 - (IBAction)backToPickerBtnTouched:(id)sender {
