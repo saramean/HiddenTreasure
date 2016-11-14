@@ -129,6 +129,24 @@
 			name = HTVideo;
 			sourceTree = "<group>";
 		};
+		4E160BF81DD96C2100DA921D /* HTTutorialPages */ = {
+			isa = PBXGroup;
+			children = (
+				4EDD84DB1DD013BD001CEE8B /* HTTutorialPageContentsViewController.h */,
+				4EDD84DC1DD013BD001CEE8B /* HTTutorialPageContentsViewController.m */,
+			);
+			name = HTTutorialPages;
+			sourceTree = "<group>";
+		};
+		4E160BF91DD96C3700DA921D /* HTAuthentication */ = {
+			isa = PBXGroup;
+			children = (
+				4EDD84E51DD0372E001CEE8B /* HTAuthenticationViewController.h */,
+				4EDD84E61DD0372E001CEE8B /* HTAuthenticationViewController.m */,
+			);
+			name = HTAuthentication;
+			sourceTree = "<group>";
+		};
 		4E2B26D91DD5E2AA00FF8266 /* HTMemo */ = {
 			isa = PBXGroup;
 			children = (
@@ -163,19 +181,17 @@
 				4EDD84DE1DD035AF001CEE8B /* HelpClasses */,
 				4EDD84B81DD00B4B001CEE8B /* AppDelegate.h */,
 				4EDD84B91DD00B4B001CEE8B /* AppDelegate.m */,
+				4EDD84E81DD0410F001CEE8B /* HTHideInfoViewController.h */,
+				4EDD84E91DD0410F001CEE8B /* HTHideInfoViewController.m */,
 				4EDD84BB1DD00B4B001CEE8B /* ViewController.h */,
 				4EDD84BC1DD00B4B001CEE8B /* ViewController.m */,
+				4E160BF81DD96C2100DA921D /* HTTutorialPages */,
+				4E160BF91DD96C3700DA921D /* HTAuthentication */,
 				4E110F491DD43F78008E6F33 /* HTVideo */,
 				4E110F481DD43F4B008E6F33 /* HTWeb */,
 				4E110F471DD43F33008E6F33 /* HTImage */,
 				4E2B26D91DD5E2AA00FF8266 /* HTMemo */,
 				4EDD84BE1DD00B4B001CEE8B /* Main.storyboard */,
-				4EDD84E81DD0410F001CEE8B /* HTHideInfoViewController.h */,
-				4EDD84E91DD0410F001CEE8B /* HTHideInfoViewController.m */,
-				4EDD84E51DD0372E001CEE8B /* HTAuthenticationViewController.h */,
-				4EDD84E61DD0372E001CEE8B /* HTAuthenticationViewController.m */,
-				4EDD84DB1DD013BD001CEE8B /* HTTutorialPageContentsViewController.h */,
-				4EDD84DC1DD013BD001CEE8B /* HTTutorialPageContentsViewController.m */,
 				4EDD84C41DD00B4B001CEE8B /* Assets.xcassets */,
 				4EDD84C61DD00B4B001CEE8B /* LaunchScreen.storyboard */,
 				4EDD84C91DD00B4B001CEE8B /* Info.plist */,
