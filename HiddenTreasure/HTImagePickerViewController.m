@@ -238,6 +238,10 @@
     }
 }
 
+- (void)imagePickerCanceledWithOutSelection{
+    NSLog(@"canceled without selection");
+}
+
 #pragma mark - Button Actions
 - (IBAction)backToAlbumBtnTouched:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];

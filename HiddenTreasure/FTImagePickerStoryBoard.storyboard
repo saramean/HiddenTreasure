@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="HOd-xX-b8B">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -180,6 +181,14 @@
                                             <action selector="cancelImagePickerBtnClicked:" destination="kqN-Lu-1hX" eventType="touchUpInside" id="HI9-oB-qZf"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y6A-gK-ope">
+                                        <frame key="frameInset" minX="18" minY="7" width="45" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Delete"/>
+                                        <connections>
+                                            <action selector="deleteAssetsBtnClicked:" destination="kqN-Lu-1hX" eventType="touchUpInside" id="dep-77-Y2O"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
@@ -190,7 +199,9 @@
                     <connections>
                         <outlet property="FTDetailView" destination="bkV-ob-btx" id="9Di-31-jI3"/>
                         <outlet property="FTimagePickerCollectionView" destination="gC1-7B-3cg" id="xcU-hM-vgM"/>
+                        <outlet property="albumBtn" destination="Rhm-1v-pZe" id="qRp-wO-e58"/>
                         <outlet property="buttonBarView" destination="rnd-7c-nEn" id="zfp-C4-Njq"/>
+                        <outlet property="deleteBtn" destination="Y6A-gK-ope" id="HuT-3K-Epb"/>
                         <outlet property="selectBtn" destination="wL4-mF-YhO" id="nKN-yq-0r0"/>
                     </connections>
                 </viewController>
@@ -262,6 +273,14 @@
                                         <action selector="selectBtnClicked:" destination="bkV-ob-btx" eventType="touchUpInside" id="Lbm-fr-AQz"/>
                                     </connections>
                                 </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9q1-k8-6zx">
+                                    <frame key="frameInset" minX="50.00%" minY="50.00%" width="45" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="Delete"/>
+                                    <connections>
+                                        <action selector="deleteBtnClicked:" destination="bkV-ob-btx" eventType="touchUpInside" id="B0U-1H-O0S"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
                         </view>
@@ -269,6 +288,7 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <connections>
                         <outlet property="buttonBarView" destination="Kkj-jB-hpK" id="rmx-Ts-Joj"/>
+                        <outlet property="deleteBtn" destination="9q1-k8-6zx" id="YKJ-zH-TvO"/>
                         <outlet property="detailCollectionView" destination="io9-gH-8aC" id="BRE-AP-7EG"/>
                         <outlet property="selectBtn" destination="Tqw-gY-QKe" id="8Mi-cY-LHF"/>
                     </connections>
