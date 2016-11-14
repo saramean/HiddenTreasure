@@ -23,6 +23,21 @@
     [self.HTWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.google.com"]]];
 }
 
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Activity Indicator
+- (void)webViewDidStartLoad:(UIWebView *)webView{
+    self.HTWebViewActivityIndicator.hidden = NO;
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView{
+    self.HTWebViewActivityIndicator.hidden = YES;
+}
+
+#pragma mark - TextField Delegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     if(textField.text.length == 0){
         return NO;
@@ -38,18 +53,11 @@
     return YES;
 }
 
-- (void)webViewDidStartLoad:(UIWebView *)webView{
-    self.HTWebViewActivityIndicator.hidden = NO;
-}
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView{
-    self.HTWebViewActivityIndicator.hidden = YES;
-}
-
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
     [textField selectAll:textField.text];
 }
 
+#pragma mark - Web View delegate
 //if a page is not found, search it from google
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     NSString *googleSearch = @"http://www.google.com/search?q=";
@@ -65,11 +73,7 @@
     return YES;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
+#pragma mark - Button Actions
 - (IBAction)BackToChoicePageBtnTouched:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -89,6 +93,7 @@
     [self.HTWebView reload];
 }
 
+#pragma mark - Keyboard Dismiss
 - (IBAction)addressFieldWillResignFirstResponderWhenWebViewTapped:(id)sender {
     [self.HTWebViewAddressField resignFirstResponder];
 

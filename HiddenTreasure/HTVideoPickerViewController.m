@@ -126,6 +126,13 @@
     return thumbnailCells;
 }
 
+- (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    float size = floor(([UIScreen mainScreen].bounds.size.width - 2)/3);
+    return CGSizeMake(size, size);
+}
+
+
+#pragma mark CollectionView Select & Deselect
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     //Select Btn is Not Touched
     if(!collectionView.allowsMultipleSelection){
@@ -218,26 +225,6 @@
     deselectedCell.layer.borderColor = [UIColor clearColor].CGColor;
 }
 
-#pragma mark - Back to Album
-- (IBAction)backToAlbumBtnTouched:(id)sender {
-    [self saveVideoLength];
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
-#pragma mark - Add Videos
-- (IBAction)addHiddenVideosBtnTouched:(id)sender {
-    FTImagePickerOptions *imagePickerOptions = [[FTImagePickerOptions alloc] init];
-    imagePickerOptions.multipleSelectOn = YES;
-    imagePickerOptions.multipleSelectMin = 1;
-    imagePickerOptions.multipleSelectMax = 20;
-    imagePickerOptions.theme = WhiteVersion;
-    imagePickerOptions.mediaTypeToUse = VideosOnly;
-    imagePickerOptions.regularAlbums = @[@2, @3, @4, @5, @6];
-    imagePickerOptions.smartAlbums = @[@200, @201, @202, @203, @204, @205, @206, @207, @208, @210, @211];
-    
-    [FTImagePickerManager presentFTImagePicker:self withOptions:imagePickerOptions];
-}
-
 #pragma mark - ImagePicker delegate
 //Format of video file is AlbumName_HV####.mp4
 //There are two more images files for video files to show thumbnail and preview
@@ -317,14 +304,25 @@
     }
 }
 
-#pragma mark - Set Cell size
-- (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    float size = floor(([UIScreen mainScreen].bounds.size.width - 2)/3);
-    return CGSizeMake(size, size);
+#pragma mark - Button Actions
+- (IBAction)backToAlbumBtnTouched:(id)sender {
+    [self saveVideoLength];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (IBAction)addHiddenVideosBtnTouched:(id)sender {
+    FTImagePickerOptions *imagePickerOptions = [[FTImagePickerOptions alloc] init];
+    imagePickerOptions.multipleSelectOn = YES;
+    imagePickerOptions.multipleSelectMin = 1;
+    imagePickerOptions.multipleSelectMax = 20;
+    imagePickerOptions.theme = WhiteVersion;
+    imagePickerOptions.mediaTypeToUse = VideosOnly;
+    imagePickerOptions.regularAlbums = @[@2, @3, @4, @5, @6];
+    imagePickerOptions.smartAlbums = @[@200, @201, @202, @203, @204, @205, @206, @207, @208, @210, @211];
+    
+    [FTImagePickerManager presentFTImagePicker:self withOptions:imagePickerOptions];
+}
 
-#pragma mark - Button Actions
 - (IBAction)selectVideosBtnTouched:(id)sender {
     self.HTVideoPickerCollectionView.allowsMultipleSelection = YES;
     self.HTVideoPickerAddBtn.hidden = YES;
@@ -464,6 +462,7 @@
 
 @end
 
+#pragma mark -
 @interface HTVideoDetailView()
 
 @end
@@ -579,11 +578,12 @@
 }
 @end
 
+#pragma mark -
 @interface HTVideoPickerCollectionViewCell()
 @end
 @implementation HTVideoPickerCollectionViewCell
 @end
-
+#pragma mark -
 @interface HTVideoDetailCollectionViewCell()
 @end
 @implementation HTVideoDetailCollectionViewCell

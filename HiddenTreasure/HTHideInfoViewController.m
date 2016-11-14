@@ -20,6 +20,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(authenticateUser) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
+#pragma mark - Touch ID Authentication
 - (void) authenticateUser{
     LAContext *contextForAuth = [[LAContext alloc] init];
     NSError *authError = nil;
@@ -49,6 +50,7 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Text Field Delegate
 //delegate for limiting string number
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     if((self.passwordFiledForHideInfo.text.length >= 4) && range.length == 0){
@@ -57,6 +59,7 @@
     return YES;
 }
 
+#pragma mark - Button Actions
 - (IBAction)hideInfoPasswordConfirmBtnTouched:(id)sender {
     if([self.passwordFiledForHideInfo.text isEqualToString:[self.keychainForPassword myObjectForKey:(__bridge id)kSecValueData]]){
         [self.navigationController popViewControllerAnimated:YES];

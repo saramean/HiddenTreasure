@@ -50,6 +50,7 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - TableView Delegate
 //Table view delegate
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     HTImageAlbumTableViewCells *imageAlbumNamesCell = [tableView dequeueReusableCellWithIdentifier:@"albumNamesCell" forIndexPath:indexPath];
@@ -76,6 +77,7 @@
     return YES;
 }
 
+//Table view sub menu when swipe to the left
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if(editingStyle == UITableViewCellEditingStyleDelete){
         UIAlertController *albumDeleteAlertController = [UIAlertController alertControllerWithTitle:@"Delete Album" message:@"If you delete this album, all the files inside of this album will be delete. Do you really want to delete this album?" preferredStyle:UIAlertControllerStyleAlert];
@@ -108,7 +110,6 @@
                     NSString *directoryWillBeChanged = cellForChange.imageAlbumName.text;
                     NSString *destinationPath = [tempPathForDirectory stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"HA%04d_%@/", i+1 ,tempStringForDirectoryName] withString:[NSString stringWithFormat:@"HA%04d_%@/", i+1, directoryWillBeChanged]];
                     NSString *originalPath = [destinationPath stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%04d", i+1] withString:[NSString stringWithFormat:@"%04d", i+2]];
-                    //[fileManager createDirectoryAtPath:destinationPath withIntermediateDirectories:YES attributes:nil error:nil];
 //                    NSLog(@"original path %@", originalPath);
 //                    NSLog(@"destination path %@", destinationPath);
 //                    NSError *error;
@@ -130,7 +131,7 @@
     }
 }
 
-
+#pragma mark - Button Actions
 - (IBAction)backToChoiceBtnTouched:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -161,6 +162,7 @@
     
 }
 
+#pragma mark - Create Album Directory
 //check invalid characters in file name
 // '/' is not allowed.
 - (BOOL) checkAllowedName: (NSString *) fileName{
@@ -243,6 +245,7 @@
     }
 }
 
+#pragma mark - Prepare For Segue
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if([segue.identifier isEqualToString:@"albumSelected"]){
         //Get destination View Controller
@@ -273,9 +276,7 @@
 
 @end
 
-
-
-
+#pragma mark -
 @interface HTImageAlbumTableViewCells ()
 @end
 

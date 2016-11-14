@@ -37,7 +37,7 @@
             [self.memoList removeObjectAtIndex:i];
         }
         else{
-            self.memoList[i] = [self.memoList[i] substringFromIndex:7];
+            self.memoList[i] = [self.memoList[i] substringWithRange:NSMakeRange(7, self.memoList[i].length -11)];
         }
     }
     
@@ -45,6 +45,12 @@
     self.HTMemoListTableView.allowsMultipleSelectionDuringEditing = NO;
 }
 
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - TableView Delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return [self.memoList count];
 }
@@ -55,27 +61,84 @@
     return cell;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(editingStyle == UITableViewCellEditingStyleDelete){
+        UIAlertController *memoDeleteAlertController = [UIAlertController alertControllerWithTitle:@"Delete Memo" message:@"Do you really want to delete this memo?" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *delete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            //Path for memo
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            
+            NSString *selectedMemoTitle = self.memoList[indexPath.row];
+            NSString *selectedMemoPath = [NSString stringWithFormat:@"%@HM%04d_%@.txt", self.documentPath, (int) indexPath.row + 1, self.memoList[indexPath.row]];
+            NSLog(@"%@", selectedMemoPath);
+            //Remove memo
+            [fileManager removeItemAtPath:selectedMemoPath error:nil];
+            //Remove Cell
+            [self.memoList removeObjectAtIndex:indexPath.row];
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationBottom];
+            
+            //Rename the other memos
+            if(indexPath.row < [self.memoList count]){
+                NSString *tempStringForMemoTitle = selectedMemoTitle;
+                NSString *tempPathForDirectory = selectedMemoPath;
+                for(int i = (int) indexPath.row ; i < [self.memoList count] ; i++){
+                    NSString *memoWillBeChanged = self.memoList[i];
+                    NSString *destinationPath = [tempPathForDirectory stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"HM%04d_%@", i+1 ,tempStringForMemoTitle] withString:[NSString stringWithFormat:@"HM%04d_%@", i+1, memoWillBeChanged]];
+                    NSString *originalPath = [destinationPath stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%04d", i+1] withString:[NSString stringWithFormat:@"%04d", i+2]];
+                    //                    NSLog(@"original path %@", originalPath);
+                    //                    NSLog(@"destination path %@", destinationPath);
+                    //                    NSError *error;
+                    [fileManager moveItemAtPath:originalPath toPath:destinationPath error:nil];
+                    //                    NSLog(@"%@", error.localizedDescription);
+                    tempPathForDirectory = originalPath;
+                    tempStringForMemoTitle = memoWillBeChanged;
+                }
+            }
+        }];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        
+        [memoDeleteAlertController addAction:cancelAction];
+        [memoDeleteAlertController addAction:delete];
+        
+        [self presentViewController:memoDeleteAlertController animated:YES completion:nil];
+    }
 }
 
-
+#pragma mark - Button Actions
 - (IBAction)backToChoiceBtnTouched:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+#pragma mark - Preapare For Segue
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if([segue.identifier isEqualToString:@"addMemo"]){
         HTMemoEditViewController *destination = segue.destinationViewController;
         destination.memoList = self.memoList;
         destination.documentPath = self.documentPath;
+        destination.HTMemoListTableView = self.HTMemoListTableView;
+    }
+    else if([segue.identifier isEqualToString:@"editMemo"]){
+        HTMemoEditViewController *destination = segue.destinationViewController;
+        HTMemoListTableViewCell *selectedCell = sender;
+        NSIndexPath *indexPathForSelectedCell = [self.HTMemoListTableView indexPathForCell:selectedCell];
+        NSLog(@"%@", self.memoList[indexPathForSelectedCell.row]);
+        destination.memoList = self.memoList;
+        destination.documentPath = self.documentPath;
+        NSString *selectedMemoPath = [NSString stringWithFormat:@"%@HM%04d_%@.txt", self.documentPath, (int) indexPathForSelectedCell.row + 1, self.memoList[indexPathForSelectedCell.row]];
+        NSData *memoData = [NSData dataWithContentsOfFile:selectedMemoPath];
+        NSArray *memoArray = [NSJSONSerialization JSONObjectWithData:memoData options:kNilOptions error:nil];
+        destination.memoTitleAndContent = @[self.memoList[indexPathForSelectedCell.row], [memoArray firstObject]];
+        NSLog(@"%@", [memoArray firstObject]);
+        destination.calledIndex = indexPathForSelectedCell.row + 1;
+        destination.HTMemoListTableView = self.HTMemoListTableView;
     }
 }
 @end
 
 
-
+#pragma mark -
 @interface HTMemoListTableViewCell()
 @end
 @implementation HTMemoListTableViewCell

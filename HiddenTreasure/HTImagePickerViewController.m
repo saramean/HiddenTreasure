@@ -68,12 +68,11 @@
     NSLog(@"warning");
 }
 
+#pragma mark - Collection view delegate
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return [self.thumbnailImages count];
 }
 
-
-#pragma Collection view delegate
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     HTImagePickerCollectionViewCell *thumbnailCells = [collectionView dequeueReusableCellWithReuseIdentifier:@"HTImagePickerCollectionViewCell" forIndexPath:indexPath];
     
@@ -88,6 +87,12 @@
     return thumbnailCells;
 }
 
+- (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    float size = floor(([UIScreen mainScreen].bounds.size.width - 2)/3);
+    return CGSizeMake(size, size);
+}
+
+#pragma mark CollectionView Cell Select & Deselect
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     //Select Btn is Not Touched
     if(!collectionView.allowsMultipleSelection){
@@ -180,25 +185,6 @@
     deselectedCell.layer.borderColor = [UIColor clearColor].CGColor;
 }
 
-#pragma mark - Back to Album
-- (IBAction)backToAlbumBtnTouched:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
-#pragma mark - Add Images
-- (IBAction)addHiddenImagesBtnTouched:(id)sender {
-    FTImagePickerOptions *imagePickerOptions = [[FTImagePickerOptions alloc] init];
-    imagePickerOptions.multipleSelectOn = YES;
-    imagePickerOptions.multipleSelectMin = 1;
-    imagePickerOptions.multipleSelectMax = 50;
-    imagePickerOptions.theme = WhiteVersion;
-    imagePickerOptions.mediaTypeToUse = ImagesOnly;
-    imagePickerOptions.regularAlbums = @[@2, @3, @4, @5, @6];
-    imagePickerOptions.smartAlbums = @[@200, @201, @202, @203, @204, @205, @206, @207, @208, @210, @211];
-    
-    [FTImagePickerManager presentFTImagePicker:self withOptions:imagePickerOptions];
-}
-
 #pragma mark - ImagePicker delegate
 //Format of Image file is AlbumName_HI####.jpg
 - (void)getSelectedImageAssetsFromImagePicker:(NSMutableArray *)selectedAssetsArray{
@@ -252,102 +238,23 @@
     }
 }
 
-#pragma mark - Set Cell size
-- (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    float size = floor(([UIScreen mainScreen].bounds.size.width - 2)/3);
-    return CGSizeMake(size, size);
+#pragma mark - Button Actions
+- (IBAction)backToAlbumBtnTouched:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
-//- (UIImage *) scaleToSize: (CGSize) size withImage:(UIImage *) imageWillBeResized{
-//    UIGraphicsBeginImageContext(size);
-//    CGContextRef context = UIGraphicsGetCurrentContext();
-//    CGContextTranslateCTM(context, 0.0, size.height);
-//    CGContextScaleCTM(context, 1.0, -1.0);
-//    CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), imageWillBeResized.CGImage);
-//    UIImage *resizedImage = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-//    return resizedImage;
-//}
-//
-//- (UIImage *)fixImageOrientation:(UIImage *) imageToFix {
-//    
-//    // No-op if the orientation is already correct
-//    if (imageToFix == UIImageOrientationUp) return imageToFix;
-//    
-//    // We need to calculate the proper transformation to make the image upright.
-//    // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
-//    CGAffineTransform transform = CGAffineTransformIdentity;
-//    
-//    switch (imageToFix.imageOrientation) {
-//        case UIImageOrientationDown:
-//        case UIImageOrientationDownMirrored:
-//            transform = CGAffineTransformTranslate(transform, imageToFix.size.width, imageToFix.size.height);
-//            transform = CGAffineTransformRotate(transform, M_PI);
-//            break;
-//            
-//        case UIImageOrientationLeft:
-//        case UIImageOrientationLeftMirrored:
-//            transform = CGAffineTransformTranslate(transform, imageToFix.size.width, 0);
-//            transform = CGAffineTransformRotate(transform, M_PI_2);
-//            break;
-//            
-//        case UIImageOrientationRight:
-//        case UIImageOrientationRightMirrored:
-//            transform = CGAffineTransformTranslate(transform, 0, imageToFix.size.height);
-//            transform = CGAffineTransformRotate(transform, -M_PI_2);
-//            break;
-//        case UIImageOrientationUp:
-//        case UIImageOrientationUpMirrored:
-//            break;
-//    }
-//    
-//    switch (imageToFix.imageOrientation) {
-//        case UIImageOrientationUpMirrored:
-//        case UIImageOrientationDownMirrored:
-//            transform = CGAffineTransformTranslate(transform, imageToFix.size.width, 0);
-//            transform = CGAffineTransformScale(transform, -1, 1);
-//            break;
-//            
-//        case UIImageOrientationLeftMirrored:
-//        case UIImageOrientationRightMirrored:
-//            transform = CGAffineTransformTranslate(transform, imageToFix.size.height, 0);
-//            transform = CGAffineTransformScale(transform, -1, 1);
-//            break;
-//        case UIImageOrientationUp:
-//        case UIImageOrientationDown:
-//        case UIImageOrientationLeft:
-//        case UIImageOrientationRight:
-//            break;
-//    }
-//    
-//    // Now we draw the underlying CGImage into a new context, applying the transform
-//    // calculated above.
-//    CGContextRef ctx = CGBitmapContextCreate(NULL, imageToFix.size.width, imageToFix.size.height,
-//                                             CGImageGetBitsPerComponent(imageToFix.CGImage), 0,
-//                                             CGImageGetColorSpace(imageToFix.CGImage),
-//                                             CGImageGetBitmapInfo(imageToFix.CGImage));
-//    CGContextConcatCTM(ctx, transform);
-//    switch (imageToFix.imageOrientation) {
-//        case UIImageOrientationLeft:
-//        case UIImageOrientationLeftMirrored:
-//        case UIImageOrientationRight:
-//        case UIImageOrientationRightMirrored:
-//            // Grr...
-//            CGContextDrawImage(ctx, CGRectMake(0,0,imageToFix.size.height,imageToFix.size.width), imageToFix.CGImage);
-//            break;
-//            
-//        default:
-//            CGContextDrawImage(ctx, CGRectMake(0,0,imageToFix.size.width, imageToFix.size.height), imageToFix.CGImage);
-//            break;
-//    }
-//    
-//    // And now we just create a new UIImage from the drawing context
-//    CGImageRef cgimg = CGBitmapContextCreateImage(ctx);
-//    UIImage *img = [UIImage imageWithCGImage:cgimg];
-//    CGContextRelease(ctx);
-//    CGImageRelease(cgimg);
-//    return img;
-//}
+- (IBAction)addHiddenImagesBtnTouched:(id)sender {
+    FTImagePickerOptions *imagePickerOptions = [[FTImagePickerOptions alloc] init];
+    imagePickerOptions.multipleSelectOn = YES;
+    imagePickerOptions.multipleSelectMin = 1;
+    imagePickerOptions.multipleSelectMax = 50;
+    imagePickerOptions.theme = WhiteVersion;
+    imagePickerOptions.mediaTypeToUse = ImagesOnly;
+    imagePickerOptions.regularAlbums = @[@2, @3, @4, @5, @6];
+    imagePickerOptions.smartAlbums = @[@200, @201, @202, @203, @204, @205, @206, @207, @208, @210, @211];
+    
+    [FTImagePickerManager presentFTImagePicker:self withOptions:imagePickerOptions];
+}
 
 - (IBAction)selectImagesBtnTouched:(id)sender {
     self.HTImagePickerCollectionView.allowsMultipleSelection = YES;
@@ -477,14 +384,108 @@
     }
 }
 
+#pragma mark - Image Resize and Fix Orientation(Not used for this Project)
+//- (UIImage *) scaleToSize: (CGSize) size withImage:(UIImage *) imageWillBeResized{
+//    UIGraphicsBeginImageContext(size);
+//    CGContextRef context = UIGraphicsGetCurrentContext();
+//    CGContextTranslateCTM(context, 0.0, size.height);
+//    CGContextScaleCTM(context, 1.0, -1.0);
+//    CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), imageWillBeResized.CGImage);
+//    UIImage *resizedImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    return resizedImage;
+//}
+//
+//- (UIImage *)fixImageOrientation:(UIImage *) imageToFix {
+//
+//    // No-op if the orientation is already correct
+//    if (imageToFix == UIImageOrientationUp) return imageToFix;
+//
+//    // We need to calculate the proper transformation to make the image upright.
+//    // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
+//    CGAffineTransform transform = CGAffineTransformIdentity;
+//
+//    switch (imageToFix.imageOrientation) {
+//        case UIImageOrientationDown:
+//        case UIImageOrientationDownMirrored:
+//            transform = CGAffineTransformTranslate(transform, imageToFix.size.width, imageToFix.size.height);
+//            transform = CGAffineTransformRotate(transform, M_PI);
+//            break;
+//
+//        case UIImageOrientationLeft:
+//        case UIImageOrientationLeftMirrored:
+//            transform = CGAffineTransformTranslate(transform, imageToFix.size.width, 0);
+//            transform = CGAffineTransformRotate(transform, M_PI_2);
+//            break;
+//
+//        case UIImageOrientationRight:
+//        case UIImageOrientationRightMirrored:
+//            transform = CGAffineTransformTranslate(transform, 0, imageToFix.size.height);
+//            transform = CGAffineTransformRotate(transform, -M_PI_2);
+//            break;
+//        case UIImageOrientationUp:
+//        case UIImageOrientationUpMirrored:
+//            break;
+//    }
+//
+//    switch (imageToFix.imageOrientation) {
+//        case UIImageOrientationUpMirrored:
+//        case UIImageOrientationDownMirrored:
+//            transform = CGAffineTransformTranslate(transform, imageToFix.size.width, 0);
+//            transform = CGAffineTransformScale(transform, -1, 1);
+//            break;
+//
+//        case UIImageOrientationLeftMirrored:
+//        case UIImageOrientationRightMirrored:
+//            transform = CGAffineTransformTranslate(transform, imageToFix.size.height, 0);
+//            transform = CGAffineTransformScale(transform, -1, 1);
+//            break;
+//        case UIImageOrientationUp:
+//        case UIImageOrientationDown:
+//        case UIImageOrientationLeft:
+//        case UIImageOrientationRight:
+//            break;
+//    }
+//
+//    // Now we draw the underlying CGImage into a new context, applying the transform
+//    // calculated above.
+//    CGContextRef ctx = CGBitmapContextCreate(NULL, imageToFix.size.width, imageToFix.size.height,
+//                                             CGImageGetBitsPerComponent(imageToFix.CGImage), 0,
+//                                             CGImageGetColorSpace(imageToFix.CGImage),
+//                                             CGImageGetBitmapInfo(imageToFix.CGImage));
+//    CGContextConcatCTM(ctx, transform);
+//    switch (imageToFix.imageOrientation) {
+//        case UIImageOrientationLeft:
+//        case UIImageOrientationLeftMirrored:
+//        case UIImageOrientationRight:
+//        case UIImageOrientationRightMirrored:
+//            // Grr...
+//            CGContextDrawImage(ctx, CGRectMake(0,0,imageToFix.size.height,imageToFix.size.width), imageToFix.CGImage);
+//            break;
+//
+//        default:
+//            CGContextDrawImage(ctx, CGRectMake(0,0,imageToFix.size.width, imageToFix.size.height), imageToFix.CGImage);
+//            break;
+//    }
+//
+//    // And now we just create a new UIImage from the drawing context
+//    CGImageRef cgimg = CGBitmapContextCreateImage(ctx);
+//    UIImage *img = [UIImage imageWithCGImage:cgimg];
+//    CGContextRelease(ctx);
+//    CGImageRelease(cgimg);
+//    return img;
+//}
+
 
 @end
 
+#pragma mark -
 @interface HTImageDetailView()
 
 @end
 @implementation HTImageDetailView
 
+#pragma mark - Collection View Delegate
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return [self.thumbnailImages count];
 }
@@ -522,6 +523,11 @@
     return detailViewCell;
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    return self.imageDetailCollectionView.frame.size;
+}
+
+#pragma mark - Scroll View Delegate
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
     for(UIView *view in [scrollView subviews]){
         if([view isKindOfClass:[UIImageView class]]){
@@ -531,10 +537,7 @@
     return nil;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return self.imageDetailCollectionView.frame.size;
-}
-
+#pragma mark - Button Actions
 - (IBAction)backToPickerBtnTouched:(id)sender {
     //make a imageView For transition and configure
     UIImageView *imageViewForTransition = [[UIImageView alloc] initWithFrame:self.HTImagePickerCollectionView.bounds];
@@ -564,11 +567,13 @@
 }
 @end
 
+#pragma mark -
 @interface HTImagePickerCollectionViewCell()
 @end
 @implementation HTImagePickerCollectionViewCell
 @end
 
+#pragma mark -
 @interface HTImageDetailCollectionViewCell()
 @end
 @implementation HTImageDetailCollectionViewCell

@@ -22,6 +22,11 @@
     if(!self.memoList){
         self.memoList = [[NSMutableArray alloc] init];
     }
+    if(self.memoTitleAndContent){
+        self.memoTitleField.text = [self.memoTitleAndContent firstObject];
+        self.memoField.text = [self.memoTitleAndContent lastObject];
+        self.memoField.textColor = [UIColor blackColor];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -29,6 +34,7 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - TextView Delegate
 - (void)textViewDidBeginEditing:(UITextView *)textView{
     if([textView.text isEqualToString:@"Memo here"]){
         textView.text = @"";
@@ -44,7 +50,9 @@
     
 }
 
+#pragma mark - Button Actions
 - (IBAction)backToMemoListTouched:(id)sender {
+    [self.HTMemoListTableView reloadData];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -60,15 +68,41 @@
             titleLength = 20;
         }
         else{
-            titleLength = (int) memoTitle.length - 1;
+            titleLength = (int) memoTitle.length;
         }
         memoTitle = [memoTitle substringToIndex:titleLength];
+        self.memoTitleField.text = memoTitle;
     }
-    NSString *fileFormatName = [NSString stringWithFormat:@"HM%04d_%@", (int) [self.memoList count] + 1, memoTitle];
-    NSString *filePath = [NSString stringWithFormat:@"%@/%@.txt", self.documentPath, fileFormatName];
-    [self.memoList addObject:fileFormatName];
-    NSData *memoContent = [NSJSONSerialization dataWithJSONObject:@[self.memoField.text] options:kNilOptions error:nil];
-    [memoContent writeToFile:filePath atomically:YES];
-    [self.memoField resignFirstResponder];
+    //save new file
+    if(self.calledIndex == 0){
+        int indexMemoWillBeSaved = (int) [self.memoList count] + 1;
+        NSString *fileFormatName = [NSString stringWithFormat:@"HM%04d_%@", indexMemoWillBeSaved , memoTitle];
+        NSString *filePath = [NSString stringWithFormat:@"%@%@.txt", self.documentPath, fileFormatName];
+        [self.memoList addObject:[fileFormatName substringFromIndex:7]];
+        NSData *memoContent = [NSJSONSerialization dataWithJSONObject:@[self.memoField.text] options:kNilOptions error:nil];
+        [memoContent writeToFile:filePath atomically:YES];
+        [self.memoField resignFirstResponder];
+        [self.memoTitleField resignFirstResponder];
+        self.calledIndex = indexMemoWillBeSaved;
+    }
+    //edit existing file
+    else{
+        int indexMemoWillBeSaved = (int) self.calledIndex;
+        NSString *fileFormatName = [NSString stringWithFormat:@"HM%04d_%@", indexMemoWillBeSaved , memoTitle];
+        NSString *filePath = [NSString stringWithFormat:@"%@%@.txt", self.documentPath, fileFormatName];
+        NSLog(@"new file path %@", filePath);
+        //remove former file
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSString *fileWillBeRemoved = [NSString stringWithFormat:@"%@HM%04d_%@.txt", self.documentPath, (int) self.calledIndex ,self.memoList[self.calledIndex - 1]];
+        NSLog(@"old file path %@", fileWillBeRemoved);
+        [fileManager removeItemAtPath:fileWillBeRemoved error:nil];
+        
+        [self.memoList replaceObjectAtIndex:self.calledIndex - 1 withObject:[fileFormatName substringFromIndex:7]];
+        NSData *memoContent = [NSJSONSerialization dataWithJSONObject:@[self.memoField.text] options:kNilOptions error:nil];
+        //save editted file
+        [memoContent writeToFile:filePath atomically:YES];
+        [self.memoField resignFirstResponder];
+        [self.memoTitleField resignFirstResponder];
+    }
 }
 @end

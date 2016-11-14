@@ -42,6 +42,7 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - TextField Delegate
 //Delegate for limiting string number
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     if((self.passwordFieldForLogin.text.length >= 4) && self.passwordFieldForLogin.isFirstResponder && range.length == 0){
@@ -76,7 +77,8 @@
 }
 
 
-
+#pragma mark - Button Actions
+#pragma mark TouchID Authentication
 - (IBAction)loginWithTouchIDBtnTouched:(id)sender {
     LAContext *contextForAuth = [[LAContext alloc] init];
     NSError *authError = nil;
@@ -108,7 +110,7 @@
     }
 
 }
-
+#pragma mark - About Create and Reset Password
 - (IBAction)resetPasswordBtnTouched:(id)sender {
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"passwordSet"];
     self.passwordSet = NO;
@@ -157,6 +159,7 @@
     [self.passwordFieldForCreation becomeFirstResponder];
 }
 
+#pragma mark Password Authentication
 - (IBAction)loginWithPaswordBtnTouched:(id)sender {
     if([self.passwordFieldForLogin.text isEqualToString:[self.keychainForPassword myObjectForKey:(__bridge id)kSecValueData]]){
         self.passwordFieldForLogin.text = nil;

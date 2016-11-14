@@ -14,6 +14,9 @@
 @property (weak, nonatomic) IBOutlet UITextField *memoTitleField;
 @property (weak, nonatomic) IBOutlet UITextView *memoField;
 @property (strong, nonatomic) NSString *documentPath;
+@property (strong, nonatomic) NSArray *memoTitleAndContent;
+@property (assign, nonatomic) NSInteger calledIndex;
+@property (strong, nonatomic) UITableView *HTMemoListTableView;
 
 - (IBAction)backToMemoListTouched:(id)sender;
 - (IBAction)memoSaveBtnTouched:(id)sender;

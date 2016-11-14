@@ -50,6 +50,7 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Table View Delegate
 //Table view delegate
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     HTVideoAlbumTableViewCells *videoAlbumNamesCell = [tableView dequeueReusableCellWithIdentifier:@"albumNamesCell" forIndexPath:indexPath];
@@ -108,7 +109,6 @@
                     NSString *directoryWillBeChanged = cellForChange.videoAlbumName.text;
                     NSString *destinationPath = [tempPathForDirectory stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"HA%04d_%@/", i+1 ,tempStringForDirectoryName] withString:[NSString stringWithFormat:@"HA%04d_%@/", i+1, directoryWillBeChanged]];
                     NSString *originalPath = [destinationPath stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%04d", i+1] withString:[NSString stringWithFormat:@"%04d", i+2]];
-                    //[fileManager createDirectoryAtPath:destinationPath withIntermediateDirectories:YES attributes:nil error:nil];
                     //                    NSLog(@"original path %@", originalPath);
                     //                    NSLog(@"destination path %@", destinationPath);
                     //                    NSError *error;
@@ -130,7 +130,7 @@
     }
 }
 
-
+#pragma mark - Button Actions
 - (IBAction)backToChoiceBtnTouched:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -161,6 +161,7 @@
     
 }
 
+#pragma mark - Create Album Directory
 //check invalid characters in file name
 // '/' is not allowed.
 - (BOOL) checkAllowedName: (NSString *) fileName{
@@ -243,6 +244,7 @@
     }
 }
 
+#pragma mark - Prepare For Segue
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if([segue.identifier isEqualToString:@"albumSelected"]){
         //Get destination View Controller
@@ -274,8 +276,7 @@
 @end
 
 
-
-
+#pragma mark -
 @interface HTVideoAlbumTableViewCells ()
 @end
 
